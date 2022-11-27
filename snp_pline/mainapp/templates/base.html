@@ -1,0 +1,51 @@
+{% load static %}
+
+<html lang="en">
+<head>
+
+     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>snp pipeline</title>
+    <link rel="stylesheet" href="{% static 'assets/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/fonts/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/animate.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/Dark-NavBar-Navigation-with-Button.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/Dark-NavBar-Navigation-with-Search.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/Dark-NavBar.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/Footer-Dark-icons.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/simple-footer.css' %}">
+</head>
+<body>
+<div>
+        <nav class="navbar navbar-light navbar-expand-md sticky-top navigation-clean-button" style="height: 80px;color: #ffffff;background: rgba(214,42,40,255);">
+            <div class="container-fluid"><h3>IPSNP: An Integrated Platform for Predicting  Impact of SNPs </h3><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="navcol-1">
+                    <ul class="navbar-nav ms-auto">
+
+                        <li class="nav-item" data-bss-hover-animate="pulse"><a class="nav-link active" style="color:#ffffff;" href="#"><i class="fa fa-star-o"></i>&nbsp;Home</a></li>
+                        <li class="nav-item" data-bss-hover-animate="pulse"><a class="nav-link active" style="color:#ffffff;" href="#"><i class="fa fa-user-circle-o"></i>&nbsp;Help</a></li>
+                        <li class="nav-item" data-bss-hover-animate="pulse"><a class="nav-link active" style="color:#ffffff;" href="#"><i class="fa fa-sign-in"></i>&nbsp;Contact us</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+{% block content %}
+{% endblock %}
+
+    <div class="footer-2" style="background: #ba6521;height: 200px;">
+        <div class="container">
+            <div class="row">
+                <div class="col-8 col-sm-6 col-md-6">
+                    <p class="text-start" style="margin-top:5%;margin-bottom:3%;">© 2022 IPSNP</p>
+                </div>
+                <div class="col-12 col-sm-6 col-md-6">
+                    <p class="text-end" style="margin-top:5%;margin-bottom:8%;font-size:1em;">Privacy Policy</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'assets/bootstrap/js/bootstrap.min.js'  %}"></script>
+    <script src="{% static 'assets/js/bs-init.js'  %}"></script>
+</body>
+</html>
