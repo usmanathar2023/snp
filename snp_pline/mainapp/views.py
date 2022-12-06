@@ -5,6 +5,7 @@ import requests, sys, json
 from . import grch38variantdata
 from .grch37variantdata import Grch37VariantData
 from .dbsnpvarientdataretrieval import DBSnpVarientDataRetrieval
+from.filewriting import FileWriting
 from .filedownloading import FileDownload
 import numpy as np
 # Create your views here.
@@ -44,6 +45,8 @@ def routeRequest(request):
                grch37vardatainstance.parsevardatabystring(dbsnpvardata_str, id)
            print('grch37vardatainstance.chr_coord_dict===', grch37vardatainstance.chr_coord_dict)
            #print("rsIds", rsIds)
+           fw=FileWriting()
+           fw.writeFileFromList(rsIds)
            context = {
                'rsids': rsIds,
                'gene': givenTerm,
