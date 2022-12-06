@@ -13,6 +13,12 @@
 <body >
 <h3>SNP IDs for Gene/Accession Id {{ gene }}</h3><br>
 <h3>Total Missense SNPs:  {{ totalSNPs }}</h3><br>
+<div style="text-align: center">
+    Accuracy of test files has been successfully computed. <p>&nbsp</p>
+    Please click <a href="download">here</a> to download CSV file.
+    <p><a href="{% url 'index' %}">Return to home</a></p>
+
+</div>
 {{ rsids }}
 </body>
 </html>

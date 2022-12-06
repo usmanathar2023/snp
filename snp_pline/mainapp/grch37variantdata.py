@@ -2,10 +2,14 @@ import requests, sys, json
 import re
 import ast
 class Grch37VariantData:
+    def __init__(self):
 
-    def parsevardatabystring(self,varData37):
+        self.chr_coord_dict ={ }
+
+
+    def parsevardatabystring(self,varData37, var_id):
         #getting orientation
-
+        chr_coord_list = []
 
         grch37index=varData37.find('GRCh37')
         varData37 = varData37[grch37index:]
@@ -14,7 +18,7 @@ class Grch37VariantData:
         varData37 = varData37[orientation_index+13:triplebracketsindex + 1]
 
         varData37=varData37.strip()
-        print('varData37== ', varData37)
+        #print('varData37== ', varData37)
         orientation_qoma_index=varData37.find(',')
 
         orientation= varData37[:orientation_qoma_index]
@@ -28,7 +32,7 @@ class Grch37VariantData:
         varData37Split=str(varData37).split('hgvs": "')
         for a in varData37Split:
             if a.find('>') > -1:
-                print('a==\n', a)
+                #print('a==\n', a)
                 greater_symbol_index=a.find('>')
                 ncdata = a[:greater_symbol_index + 2]
                 #separate chr coordinates as SIFT format
@@ -47,6 +51,8 @@ class Grch37VariantData:
                 altalllele = ncdata[greater_symbol_index + 1:len(ncdata)]
                 #print('altalllele== ', altalllele)
                 chrcooridnates37=str(chr)+','+chrpos+','+orientation+','+orgalllele+'/'+altalllele
-                print('chrcooridnates37== ', chrcooridnates37)
+                #print('chrcooridnates37== ', chrcooridnates37)
+                chr_coord_list.append(chrcooridnates37)
                 #return chrcooridnates37
 
+        self.chr_coord_dict[var_id]=chr_coord_list

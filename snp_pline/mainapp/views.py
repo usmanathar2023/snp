@@ -5,6 +5,7 @@ import requests, sys, json
 from . import grch38variantdata
 from .grch37variantdata import Grch37VariantData
 from .dbsnpvarientdataretrieval import DBSnpVarientDataRetrieval
+from .filedownloading import FileDownload
 import numpy as np
 # Create your views here.
 global noOk
@@ -30,22 +31,25 @@ def routeRequest(request):
            #print("ids", ids)
            rsIds=[]
            string = 'rs'
+           grch37vardatainstance = Grch37VariantData()
            for id in ids:
-               id='rs' + str(id)
+               dbsnpvardata = DBSnpVarientDataRetrieval()
+               dbsnpvardata_str = dbsnpvardata.getvariantdata(id)
+               # print('dbsnpvardata_str  ',dbsnpvardata_str)
+               # grch38vardatainstance= grch38variantdata.Grch38VariantData()
+               # grch38vardata=grch38vardatainstance.parsevardatabystring(dbsnpvardata_str)
+
+               id = 'rs' + str(id)
                rsIds.append(id)
+               grch37vardatainstance.parsevardatabystring(dbsnpvardata_str, id)
+           print('grch37vardatainstance.chr_coord_dict===', grch37vardatainstance.chr_coord_dict)
            #print("rsIds", rsIds)
            context = {
                'rsids': rsIds,
                'gene': givenTerm,
                'totalSNPs':totalSNPs,
            }
-           dbsnpvardata=DBSnpVarientDataRetrieval()
-           dbsnpvardata_str=dbsnpvardata.getvariantdata('4538')
-           #print('dbsnpvardata_str  ',dbsnpvardata_str)
-           #grch38vardatainstance= grch38variantdata.Grch38VariantData()
-           #grch38vardata=grch38vardatainstance.parsevardatabystring(dbsnpvardata_str)
-           grch37vardatainstance=Grch37VariantData()
-           grch37vardata=grch37vardatainstance.parsevardatabystring(dbsnpvardata_str)
+
 
            #spdiIdInfo=spdiserviceIdInfo('4537')
 
@@ -160,3 +164,6 @@ def spdiserviceIdInfo(givenId):
     spdiIdInfo = r.json()
     return spdiIdInfo
     #print("variant info by spdi ", decoded)
+def downloadFile(request):
+    fDownload=cpf.FileDownload()
+    return fDownload.download_file(request, '/'+ acFile)
