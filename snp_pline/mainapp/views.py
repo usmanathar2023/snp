@@ -2,6 +2,9 @@
 from django.shortcuts import render
 from Bio import Entrez
 import requests, sys, json
+from . import grch38variantdata
+from .grch37variantdata import Grch37VariantData
+from .dbsnpvarientdataretrieval import DBSnpVarientDataRetrieval
 import numpy as np
 # Create your views here.
 global noOk
@@ -19,8 +22,9 @@ def routeRequest(request):
 
         else:
            Entrez.email = "usman.athar@gmail.com"
-           handle = Entrez.esearch(db="snp", term=fabricatedTerm, retmax=10000)
+           handle = Entrez.esearch(db="snp", term=fabricatedTerm, retmax=10)
            variantData = Entrez.read(handle)
+
            totalSNPs=variantData['Count']
            ids=variantData["IdList"]
            #print("ids", ids)
@@ -35,7 +39,57 @@ def routeRequest(request):
                'gene': givenTerm,
                'totalSNPs':totalSNPs,
            }
-           spdiserviceIdInfo('4537')
+           dbsnpvardata=DBSnpVarientDataRetrieval()
+           dbsnpvardata_str=dbsnpvardata.getvariantdata('4538')
+           #print('dbsnpvardata_str  ',dbsnpvardata_str)
+           #grch38vardatainstance= grch38variantdata.Grch38VariantData()
+           #grch38vardata=grch38vardatainstance.parsevardatabystring(dbsnpvardata_str)
+           grch37vardatainstance=Grch37VariantData()
+           grch37vardata=grch37vardatainstance.parsevardatabystring(dbsnpvardata_str)
+
+           #spdiIdInfo=spdiserviceIdInfo('4537')
+
+           #spdiIdInfo_dict=json.loads(spdiIdInfo_str)
+           #spdiIdInfo_dict=spdiIdInfo_dict.get('primary_snapshot_data')
+           '''
+           spdiIdInfo_str=spdiIdInfo_str[grch37Index:]
+           print('spdiIdInfo_str after 37== ', spdiIdInfo_str)
+           triplebracesindex=spdiIdInfo_str.find('}]}')
+           varData37 = spdiIdInfo_str[:triplebracesindex]
+           print('varData37== ', varData37)
+
+           
+           is38=False
+           dnavarinfo37=''
+           orientation=0
+           vals = spdiIdInfo_dict.values()
+
+           for value in vals:
+                val=str(value)
+                print('vals == \n', val)
+                if val.find('38')>0:
+                    is38=True
+                    print('is38=== ',is38)
+                elif val.find('37')>0:
+                    is38=False
+                if is38:
+                    if str(value).__contains__('false  '):
+                        orientation=1
+                    if str(value).startswith('NC_') and str(value).__contains__('>'):
+                        dnavarinfo38=value
+                    if str(value).startswith('NP_') and str(value).endswith(''):
+                        proteinvarinfo=value
+                else:
+                    if str(value).__contains__('false'):
+                        orientation=1
+                    if str(value).startswith('NC_') and str(value).__contains__('>'):
+                        dnavarinfo37=value
+                    if str(value).startswith('NP_') and str(value).endswith(''):
+                        proteinvarinfo=value
+           siftparams=str(dnavarinfo37)+str(orientation)
+           print('siftparams== ',siftparams)
+'''
+
            #entrezIdSummaryInfo(ids[0])
            #entrezIdfFetchInfo(ids[0])
            #for rsId in rsIds:
