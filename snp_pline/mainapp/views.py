@@ -7,9 +7,13 @@ from .grch37variantdata import Grch37VariantData
 from .dbsnpvarientdataretrieval import DBSnpVarientDataRetrieval
 from.filewriting import FileWriting
 from .filedownloading import FileDownload
+from .csvwriting import CSVFileWriting
+import uuid
 import numpy as np
 # Create your views here.
-global noOk
+noOk=0
+unique_filename=''
+unique_grch37_filename=''
 def index(request):
     return render(request, 'index.html')
 def routeRequest(request):
@@ -24,36 +28,65 @@ def routeRequest(request):
 
         else:
            Entrez.email = "usman.athar@gmail.com"
-           handle = Entrez.esearch(db="snp", term=fabricatedTerm, retmax=10)
+           #handle = Entrez.esearch(db="snp", term=fabricatedTerm, retmax=1)
+           handle = Entrez.esearch(db="protein", term=givenTerm, retmax=1)
            variantData = Entrez.read(handle)
-
+           print('variantData',variantData)
            totalSNPs=variantData['Count']
            ids=variantData["IdList"]
            #print("ids", ids)
+           '''
            rsIds=[]
            string = 'rs'
            grch37vardatainstance = Grch37VariantData()
+           grch38vardatainstance = grch38variantdata.Grch38VariantData()
            for id in ids:
                dbsnpvardata = DBSnpVarientDataRetrieval()
                dbsnpvardata_str = dbsnpvardata.getvariantdata(id)
                # print('dbsnpvardata_str  ',dbsnpvardata_str)
-               # grch38vardatainstance= grch38variantdata.Grch38VariantData()
-               # grch38vardata=grch38vardatainstance.parsevardatabystring(dbsnpvardata_str)
+
 
                id = 'rs' + str(id)
                rsIds.append(id)
                grch37vardatainstance.parsevardatabystring(dbsnpvardata_str, id)
+               grch38vardatainstance.parsevardatabystring(dbsnpvardata_str,id)
            print('grch37vardatainstance.chr_coord_dict===', grch37vardatainstance.chr_coord_dict)
+
+
            #print("rsIds", rsIds)
+
+           # writing rsids in text file
            fw=FileWriting()
-           fw.writeFileFromList(rsIds)
+           global unique_filename
+           unique_filename = 'media/'+str(uuid.uuid4())+'.txt'
+           fw.writeFileFromList(rsIds,unique_filename)
+
+           #writing GRCh37 chromosome coordinates in csv format
+           global unique_grch37_filename
+           csvfw=CSVFileWriting()
+           unique_grch37_filename= 'media/'+str(uuid.uuid4())+'.txt'
+           csvfw.writeGRch37VarDataCSV(grch37vardatainstance.chr_coord_dict,unique_grch37_filename)
+
+           # writing GRCh38 chromosome coordinates in csv format
+           global unique_grch38_filename
+           csvfw = CSVFileWriting()
+           unique_grch38_filename = 'media/' + str(uuid.uuid4()) + '.txt'
+           csvfw.writeGRch38VarDataCSV(grch38vardatainstance.chr_coord_dict, unique_grch38_filename)
+
+
            context = {
                'rsids': rsIds,
                'gene': givenTerm,
                'totalSNPs':totalSNPs,
            }
+            
+            '''
 
-
+           context = {
+               'rsids':'',
+               'gene': '',
+               'totalSNPs': '',
+           }
            #spdiIdInfo=spdiserviceIdInfo('4537')
 
            #spdiIdInfo_dict=json.loads(spdiIdInfo_str)
@@ -131,6 +164,7 @@ def ensembleIdInfo(givenId):
     r = requests.get(server + ext, headers={"Content-Type": "application/json"})
 
     if not r.ok:
+        global noOk
         noOk+=1
      #   r.raise_for_status()
        # sys.exit()
@@ -168,5 +202,13 @@ def spdiserviceIdInfo(givenId):
     return spdiIdInfo
     #print("variant info by spdi ", decoded)
 def downloadFile(request):
-    fDownload=cpf.FileDownload()
-    return fDownload.download_file(request, '/'+ acFile)
+    fDownload=FileDownload()
+    return fDownload.download_file(request, '/'+ unique_filename)
+def downloadGRCh37File(request):
+    fDownload=FileDownload()
+    return fDownload.download_file(request, '/'+  unique_grch37_filename)
+def downloadGRCh38File(request):
+    fDownload=FileDownload()
+    return fDownload.download_file(request, '/'+  unique_grch38_filename)
+
+

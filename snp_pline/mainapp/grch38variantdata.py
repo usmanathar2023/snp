@@ -2,10 +2,13 @@ import requests, sys, json
 import re
 import ast
 class Grch38VariantData:
+    def __init__(self):
+        self.chr_coord_dict ={ }
 
-    def parsevardatabystring(self,varData38):
+    def parsevardatabystring(self,varData38,  var_id):
         #getting orientation
-        print('actual varData38',varData38)
+        chr_coord_list = []
+
         orientation_index=varData38.find('orientation":')
         triplebracketsindex=varData38.find('}]}')
 
@@ -62,8 +65,12 @@ class Grch38VariantData:
                 altalllele = ncdata[greater_symbol_index + 1:len(ncdata)]
                 #print('altalllele== ', altalllele)
                 chrcooridnates38=str(chr)+','+chrpos+','+orientation+','+orgalllele+'/'+altalllele
-                print('chrcooridnates38== ', chrcooridnates38)
+                #print('chrcooridnates38== ', chrcooridnates38)
+                chr_coord_list.append(chrcooridnates38)
                 #return chrcooridnates38
+        self.chr_coord_dict[var_id] = chr_coord_list
+
+
 
 is38=False
 is37=False

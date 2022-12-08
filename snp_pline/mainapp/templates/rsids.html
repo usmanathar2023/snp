@@ -2,23 +2,22 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <script>
-        function openInNewTab() {
-            window.open(
-            "rsids.html", "_blank");
-        }
-    </script>
+    <title>IPSNP:Chromosome Coordinates</title>
+
 </head>
 <body >
-<h3>SNP IDs for Gene/Accession Id {{ gene }}</h3><br>
+<h3>Variant data for Gene/Accession Id {{ gene }}</h3><br>
 <h3>Total Missense SNPs:  {{ totalSNPs }}</h3><br>
-<div style="text-align: center">
-    Accuracy of test files has been successfully computed. <p>&nbsp</p>
-    Please click <a href="download">here</a> to download CSV file.
-    <p><a href="{% url 'index' %}">Return to home</a></p>
+<div style="text-align: left">
+<ul>
+   <li> Please click <a href="download">here</a> to download rsIds of {{ gene }} </li>
+    <li>Please click <a href="download_grch37data">here</a> to download GRCh37 chromosome coordinates of {{ gene }}</li>
+    <li>Please click <a href="download_grch38data">here</a> to download GRCh38 chromosome coordinates of {{ gene }}</li>
+</ul>
 
 </div>
-{{ rsids }}
+<div style="text-align: left">
+<a href="{% url 'index' %}">Return to home</a>
+</div>
 </body>
 </html>
