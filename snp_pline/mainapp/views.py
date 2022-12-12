@@ -8,6 +8,8 @@ from .dbsnpvarientdataretrieval import DBSnpVarientDataRetrieval
 from.filewriting import FileWriting
 from .filedownloading import FileDownload
 from .csvwriting import CSVFileWriting
+from .proteinvariantdata import ProteinVariantData
+from .refseqid_to_uniprotid import RefSeqId_to_UniProtId
 import uuid
 import numpy as np
 # Create your views here.
@@ -16,6 +18,7 @@ unique_filename=''
 unique_grch37_filename=''
 def index(request):
     return render(request, 'index.html')
+results =''
 def routeRequest(request):
     if request.method == 'POST':
         whattodo=str(request.POST.get('actiontyperdbtn', 'run'))
@@ -28,13 +31,19 @@ def routeRequest(request):
 
         else:
            Entrez.email = "usman.athar@gmail.com"
-           #handle = Entrez.esearch(db="snp", term=fabricatedTerm, retmax=1)
-           handle = Entrez.esearch(db="protein", term=givenTerm, retmax=1)
+           handle = Entrez.esearch(db="snp", term=fabricatedTerm, retmax=1)
            variantData = Entrez.read(handle)
-           print('variantData',variantData)
            totalSNPs=variantData['Count']
            ids=variantData["IdList"]
-           #print("ids", ids)
+
+           dbsnpvardata = DBSnpVarientDataRetrieval()
+           dbsnpvardata_str = dbsnpvardata.getvariantdata('4544')
+           prot_var_data=ProteinVariantData()
+           refseqid_to_uniprotid=RefSeqId_to_UniProtId()
+           refseqid_to_uniprotid.get_uniprotid_from_refseqid(givenTerm)
+
+
+
            '''
            rsIds=[]
            string = 'rs'
