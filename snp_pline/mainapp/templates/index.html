@@ -5,45 +5,15 @@
 
     <section style="background: rgba(245,126,32,255);height: 450px;">
         <div class="container text-center" style="background: rgba(245,126,32,255);color: rgb(255,255,255);width: 1000px;height: 50px;border-style: none;"></div>
-        <form method="post" action="routerequest" enctype="multipart/form-data"  onsubmit="return formValidation()" id="snpprocessingform" name="snpprocessingform" target="_blank">
-            {% csrf_token %}
-        <div class="container text-center border rounded-pill border-danger" style="background: rgba(214,42,40,255);color: rgb(255,255,255);width: 1000px;height: 365px;border-style: none;">
-            <h2 class="mb-5">Input Parameters</h2>
-            <div class="row">
-                <div class="col"><label class="form-label">Gen ID:&nbsp;</label><input class="border rounded" type="text" name="genId" style="width: 350px;"></div>
-            </div>
-            <div class="row">
-                <div class="col"><input type="radio" name="actiontyperdbtn" value="run"><label class="form-label">Run&nbsp; &nbsp; &nbsp;&nbsp;</label><input type="radio" name="actiontyperdbtn" value="parameters"><label class="form-label">Get Parameters</label></div>
-            </div>
 
-            <div class="row">
-                <div class="col"><input type="checkbox" style="border-style: none;"><label class="form-label">&nbsp;All&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; &nbsp;</label></div>
-                <div class="col"><label class="form-label">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</label></div>
-                <div class="col"><label class="form-label">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</label></div>
-                <div class="col"><label class="form-label">&nbsp;</label></div>
-            </div>
-            <div class="row">
-                <div class="col"><input type="checkbox" style="border-style: none;"><label class="form-label">&nbsp;SIFT&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</label></div>
-                <div class="col"><input type="checkbox"><label class="form-label">&nbsp;PolyPhen&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</label></div>
-                <div class="col"><input type="checkbox"><label class="form-label">&nbsp;PROVEAN&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</label></div>
-                <div class="col"><input type="checkbox" style="border-style: none;"><label class="form-label">&nbsp;SNP &amp; GO</label></div>
-            </div>
-            <div class="row">
-                <div class="col"><input type="checkbox" style="border-style: none;"><label class="form-label">&nbsp;I-Mutant&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</label></div>
-                <div class="col"><input type="checkbox" style="border-style: none;"><label class="form-label">&nbsp;MuPro&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</label></div>
-                <div class="col"><input type="checkbox" style="border-style: none;"><label class="form-label">&nbsp;Fathmm&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</label></div>
-                <div class="col"><input type="checkbox"><label class="form-label">&nbsp;PANTHER&nbsp;&nbsp;</label></div>
-            </div>
-            <div class="row">
-                <div class="col"><input type="checkbox" style="border-style: none;"><label class="form-label">&nbsp;PMut&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</label></div>
-                <div class="col"><input type="checkbox" style="border-style: none;"><label class="form-label">Mutation Accessor</label></div>
-                <div class="col"><input type="checkbox" style="border-style: none;"><label class="form-label">&nbsp;SusPect&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</label></div>
-                <div class="col"><input type="checkbox" style="border-style: none;"><label class="form-label">&nbsp;LIST&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</label></div>
-            </div>
-            <div class="row" style="height: 20px;"></div><button class="btn btn-outline-light btn-lg" type="submit" style="background: rgba(245,126,32,255);font-family: Montserrat, sans-serif;border-style: none;">Continue</button>&nbsp;&nbsp;&nbsp;<button class="btn btn-outline-light btn-lg" type="button" style="background: rgba(245,126,32,255);border-style: none;">&nbsp; &nbsp;Reset&nbsp; &nbsp;</button>
+        <div class="container text-center border rounded-pill border-danger" style="background: rgba(214,42,40,255);color: rgb(255,255,255);width: 1000px;height: 365px;border-style: none;">
+             <br>
+             <h2 class="mb-5">Chose what do you want...</h2> <br><br>
+            <a class="btn btn-outline-light btn-lg"  style="background: rgba(245,126,32,255);font-family: Montserrat, sans-serif;border-style: none;" href="{% url 'runtools'  %}">Run the tools</a>
+           <a class="btn btn-outline-light btn-lg"  style="background: rgba(245,126,32,255);border-style: none;" href="{% url 'vardataretrieval' %}">&nbsp; &nbsp;Get data to run the tools&nbsp; &nbsp;</a>
         </div>
-        </form>
-        <div class="container text-center" style="background: rgba(245,126,32,255);color: rgb(255,255,255);width: 1000px;height: 50px;border-style: none;"></div>
+
     </section>
+
 
 {% endblock %}

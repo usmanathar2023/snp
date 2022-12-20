@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+
+    <section style="background: rgba(245,126,32,255);height: 450px;">
+        <div class="container text-center" style="background: rgba(245,126,32,255);color: rgb(255,255,255);width: 1000px;height: 50px;border-style: none;"></div>
+        <form method="post" action="vardataretrieval/vardataretrievalprocessing" enctype="multipart/form-data"  onsubmit="return formValidation()" id="snpprocessingform" name="snpprocessingform" target="_blank">
+            {% csrf_token %}
+        <div class="container text-center border rounded-pill border-danger" style="background: rgba(214,42,40,255);color: rgb(255,255,255);width: 1000px;height: 365px;border-style: none;">
+            <br>
+             <h2 class="mb-5">Get SNPs data</h2>
+            <div class="row">
+                <div class="col"><label class="form-label">Gen ID:&nbsp;</label><input class="border rounded" type="text" name="genId" style="width: 350px;"></div>
+            </div> <br>
+
+
+            <div class="row">
+                <div class="col"><input type="checkbox" style="border-style: none;"><label class="form-label">&nbsp;All&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; </label></div>
+                <div class="col"><label class="form-label">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</label></div>
+                <div class="col"><label class="form-label">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</label></div>
+                <div class="col"><label class="form-label">&nbsp;</label></div>
+            </div>
+            <div class="row">
+                <div class="col"><input type="checkbox" style="border-style: none;" id="grch37dataoption" name="chekboxValues" value="grch37"><label class="form-label">GRCh37 data </label></div>
+                <div class="col"><input type="checkbox" id="grch38dataoption" name="chekboxValues" value="grch38"><label class="form-label">GRCh38 data</label></div>
+                <div class="col"><input type="checkbox" id="protdataoption" name="chekboxValues" value="protdata"><label class="form-label">Protein data</label></div>
+                <div class="col"><input type="checkbox" style="border-style: none;" id="rsidsoption" name="chekboxValues" value="rsids"><label class="form-label">Variants (rs) ids</label></div>
+            </div>
+
+            <div class="row" style="height: 20px;"></div><button class="btn btn-outline-light btn-lg" type="submit" style="background: rgba(245,126,32,255);font-family: Montserrat, sans-serif;border-style: none;">Continue</button>&nbsp;&nbsp;&nbsp;<button class="btn btn-outline-light btn-lg" type="button" style="background: rgba(245,126,32,255);border-style: none;">&nbsp; &nbsp;Reset&nbsp; &nbsp;</button>
+        </div>
+        </form>
+        <div class="container text-center" style="background: rgba(245,126,32,255);color: rgb(255,255,255);width: 1000px;height: 50px;border-style: none;"></div>
+    </section>
+
+{% endblock %}

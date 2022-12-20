@@ -3,12 +3,13 @@ from . import views
 
 urlpatterns=[
     path('', views.index, name='index'),
-    path('routerequest', views.routeRequest, name='routereq'),
-    path('download', views.downloadFile, name="download"),
-    path('download_grch37data', views.downloadGRCh37File, name="downloadGRCh37"),
-    path('download_grch38data', views.downloadGRCh38File, name="downloadGRCh38"),
 
-
-
+    path('vardataretrieval/vardataretrievalprocessing', views.vardataretrievalprocessing, name='vdataretproc'),
+    path('runtools', views.runTools, name='runtools'),
+    path('vardataretrieval', views.varDataRetrieval, name='vardataretrieval'),
+    path('vardataretrieval/download', views.downloadRSIdFile, name="downloadRSId"),
+    path('vardataretrieval/download_grch37data', views.downloadGRCh37File, name="downloadGRCh37"),
+    path('vardataretrieval/download_grch38data', views.downloadGRCh38File, name="downloadGRCh38"),
+    path('vardataretrieval/download_Protdata', views.downloadProteinDataFile, name="downloadProData"),
 
 ]

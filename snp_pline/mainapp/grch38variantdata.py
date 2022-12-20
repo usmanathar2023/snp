@@ -68,7 +68,8 @@ class Grch38VariantData:
                 #print('chrcooridnates38== ', chrcooridnates38)
                 chr_coord_list.append(chrcooridnates38)
                 #return chrcooridnates38
-        self.chr_coord_dict[var_id] = chr_coord_list
+                #print('chr_coord_list38 == ', chr_coord_list)
+            self.chr_coord_dict['rs'+var_id] = chr_coord_list
 
 
 

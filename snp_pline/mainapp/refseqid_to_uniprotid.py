@@ -11,6 +11,7 @@ class RefSeqId_to_UniProtId:
         prot_name = results[index+1:index2]
         newlineIndex = results.find('\n')
         protein=results[newlineIndex+1:]
-        fileText= 'Gene Name: ' + term + '\n UniProt ID:'+ prot_id + '\n UniProt Name: ' + prot_name + '\nProtein Data: ' + protein
+        protData= 'Gene Name: \n' + term + '\nUniProt ID:\n'+ prot_id + '\nUniProt Name:\n ' + prot_name + '\nProtein Data: \n' + protein
+        return protData
 
 
