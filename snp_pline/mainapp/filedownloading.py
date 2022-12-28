@@ -24,7 +24,7 @@ class FileDownload:
         path = open(filepath, 'r')
         mime_type, _ = mimetypes.guess_type(filepath)
         response = HttpResponse(path, content_type=mime_type)
-        response['Content-Disposition'] = 'attachment; filename='+filename + "'"
+        response['Content-Disposition'] = 'attachment; filename='+filename #+ "'"
         #print("reponse===================== "+response.__str__())
         # Return the response value
         return response

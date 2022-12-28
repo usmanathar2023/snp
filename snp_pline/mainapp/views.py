@@ -8,6 +8,7 @@ from .dbsnpvarientdataretrieval import DBSnpVarientDataRetrieval
 from.filewriting import FileWriting
 from .filedownloading import FileDownload
 from .excelrw import ExcelRW
+from .csvwriting import CSVFileWriting
 from .proteinvariantdata import ProteinVariantData
 from .refseqid_to_uniprotid import RefSeqId_to_UniProtId
 import uuid
@@ -48,6 +49,7 @@ def vardataretrievalprocessing(request):
         grch37vardatainstance = Grch37VariantData()
         grch38vardatainstance = grch38variantdata.Grch38VariantData()
         excelrw = ExcelRW()
+        csvfw=CSVFileWriting()
         prot_var_data = ProteinVariantData()
         refseqid_to_uniprotid = RefSeqId_to_UniProtId()
         count=0; protData=''
@@ -68,14 +70,17 @@ def vardataretrievalprocessing(request):
             count = count + 1
         if chekboxValues.__contains__('grch37'):
             global grch37_filename
-            grch37_filename = 'media/' + str(uuid.uuid4()) + '_GRCh37' + '.xlsx'
-            excelrw.writeGRch37VarDataInExcel(grch37vardatainstance.chr_coord_dict, grch37_filename)
+            grch37_filename = 'media/' + str(uuid.uuid4()) + '_GRCh37' + '.csv'
+            csvfw.writeGRch37VarDataCSV(grch37vardatainstance.chr_coord_list, grch37_filename)
+            #excelrw.writeGRch37VarDataInExcel(grch37vardatainstance.chr_coord_list, grch37_filename)
 
             grch37B=True
         if chekboxValues.__contains__('grch38'):
             global grch38_filename
-            grch38_filename = 'media/' + str(uuid.uuid4()) + '_GRCh38' + '.xlsx'
-            excelrw.writeGRch38VarDataInExcel(grch38vardatainstance.chr_coord_dict, grch38_filename)
+            #grch38_filename = 'media/' + str(uuid.uuid4()) + '_GRCh38' + '.xlsx'
+            #excelrw.writeGRch38VarDataInExcel(grch38vardatainstance.chr_coord_dict, grch38_filename)
+            grch38_filename = 'media/' + str(uuid.uuid4()) + '_GRCh38' + '.csv'
+            csvfw.writeGRch38VarDataCSV(grch38vardatainstance.chr_coord_list, grch38_filename)
 
             grch38B=True
         if chekboxValues.__contains__('protdata'):
@@ -168,10 +173,12 @@ def downloadRSIdFile(request):
     return fDownload.download_file(request, '/'+ rsIds_filename)
 def downloadGRCh37File(request):
     fDownload=FileDownload()
-    return fDownload.downloadExcelFile(request, '/'+  grch37_filename)
+    #return fDownload.downloadExcelFile(request, '/'+  grch37_filename)
+    return fDownload.download_file(request, '/' + grch37_filename)
 def downloadGRCh38File(request):
     fDownload=FileDownload()
-    return fDownload.downloadExcelFile(request, '/'+  grch38_filename)
+    #return fDownload.downloadExcelFile(request, '/'+  grch38_filename)
+    return fDownload.download_file(request, '/' + grch38_filename)
 def downloadProteinDataFile(request):
     fDownload=FileDownload()
     return fDownload.download_file(request, '/'+  prot_var_data_filename)

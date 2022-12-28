@@ -4,12 +4,12 @@ import ast
 class Grch37VariantData:
     def __init__(self):
 
-        self.chr_coord_dict ={ }
+        self.chr_coord_list =[]
 
 
     def parsevardatabystring(self,varData37, var_id):
         #getting orientation
-        chr_coord_list = []
+        chr_coord_list_local = []
 
         grch37index=varData37.find('GRCh37')
         varData37 = varData37[grch37index:]
@@ -32,6 +32,7 @@ class Grch37VariantData:
         varData37Split=str(varData37).split('hgvs": "')
         for a in varData37Split:
             if a.find('>') > -1:
+                chr_coord_list_local=[]
                 #print('a==\n', a)
                 greater_symbol_index=a.find('>')
                 ncdata = a[:greater_symbol_index + 2]
@@ -52,7 +53,8 @@ class Grch37VariantData:
                 #print('altalllele== ', altalllele)
                 chrcooridnates37=str(chr)+','+chrpos+','+orientation+','+orgalllele+'/'+altalllele
                 #print('chrcooridnates37== ', chrcooridnates37)
-                chr_coord_list.append(chrcooridnates37)
+                chr_coord_list_local.append('rs'+var_id)
+                chr_coord_list_local.append(chrcooridnates37)
                 #return chrcooridnates37
                 #print('chr_coord_list37== ', chr_coord_list)
-            self.chr_coord_dict['rs'+var_id]=chr_coord_list
+                self.chr_coord_list.append(chr_coord_list_local)

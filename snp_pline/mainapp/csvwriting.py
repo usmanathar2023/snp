@@ -1,20 +1,21 @@
+import csv
 class CSVFileWriting:
     accuracyFile=''
     systemUsageFile = ''
-    def writeGRch37VarDataCSV(self, data, fname):
-        header = ['rsId', 'Chromosome_Coordinates']
+    def writeGRch38VarDataCSV(self, chr_coord_list, fname):
+        fieldnames = ['rsId', 'Chromosome_Coordinates']
+        print('data', chr_coord_list)
         count = 0
-        with open(fname, 'w') as f:
-            for key in data.keys():
-                coordinates=''.join(data[key])
-                coordinates=' '+coordinates+'\n'
-                f.write("%s:%s" %(key,coordinates))
+        with open(fname, 'w', encoding='UTF8', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow(fieldnames)
+            writer.writerows(chr_coord_list)
 
-    def writeGRch38VarDataCSV(self, data, fname):
-        header = ['rsId', 'Chromosome_Coordinates']
+    def writeGRch37VarDataCSV(self, chr_coord_list, fname):
+        fieldnames = ['rsId', 'Chromosome_Coordinates']
+        print('data', chr_coord_list)
         count = 0
-        with open(fname, 'w') as f:
-            for key in data.keys():
-                coordinates = ''.join(data[key])
-                coordinates = ' ' + coordinates + '\n'
-                f.write("%s:%s" % (key, coordinates))
+        with open(fname, 'w', encoding='UTF8', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow(fieldnames)
+            writer.writerows(chr_coord_list)
