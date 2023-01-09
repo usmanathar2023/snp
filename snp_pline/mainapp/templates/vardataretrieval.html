@@ -1,7 +1,14 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-
+<script type="text/javascript">
+ function changeCheckBoxState(src){
+    var checkboxes = document.getElementsByName('chekboxValues');
+    for (var checkbox of checkboxes) {
+        checkbox.checked = src.checked;
+    }
+}
+         </script>
 
     <section style="background: rgba(245,126,32,255);height: 450px;">
         <div class="container text-center" style="background: rgba(245,126,32,255);color: rgb(255,255,255);width: 1000px;height: 50px;border-style: none;"></div>
@@ -16,7 +23,7 @@
 
 
             <div class="row">
-                <div class="col"><input type="checkbox" style="border-style: none;"><label class="form-label">&nbsp;All&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; </label></div>
+                <div class="col"><input type="checkbox" id="select-all" style="border-style: none;" onClick="changeCheckBoxState(this)"><label class="form-label">&nbsp;All&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; </label></div>
                 <div class="col"><label class="form-label">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</label></div>
                 <div class="col"><label class="form-label">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</label></div>
                 <div class="col"><label class="form-label">&nbsp;</label></div>
