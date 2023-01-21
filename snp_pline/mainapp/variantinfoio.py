@@ -14,7 +14,7 @@ class VarintInfoIO:
         mv = myvariant.MyVariantInfo()
         mvVar = ''
         Entrez.email = "usman.athar@gmail.com"
-        handle = Entrez.esearch(db="snp", term=fabricatedTerm, retmax=2)
+        handle = Entrez.esearch(db="snp", term=fabricatedTerm, retmax=1000)
         variantData = Entrez.read(handle)
         totalSNPs = variantData['Count']
         varids = variantData["IdList"]
@@ -26,7 +26,7 @@ class VarintInfoIO:
         rsIds = []
         var = ''
         loopCount=0;
-        print('chekboxValues=== ', chekboxValues)
+        #print('chekboxValues=== ', chekboxValues)
         fabricatedFields=[]
         listOfTuplesSift = []
         annotationDataRowSift = []
@@ -93,7 +93,7 @@ class VarintInfoIO:
             r = requests.get('http://myvariant.info/v1/variant/'+id)  # , headers={"Content-Type": "application/json"})
             varDic = r.json()
             dbnsfpVarDic=varDic.get('dbnsfp')
-            print('dbnsfpVarDic= ',dbnsfpVarDic)
+            #print('dbnsfpVarDic= ',dbnsfpVarDic)
 
 
             fabricatedFields.clear()
@@ -193,7 +193,7 @@ class VarintInfoIO:
             if chekboxValues.__contains__('provean'):
                 #fabricatedFields.append('dbnsfp.provean.pred,dbnsfp.provean.rankscore, dbnsfp.provean.score')
                 for x in dictIO.nested_dict_pairs_iterator(dbnsfpVarDic.get('provean')):
-                    print(x)
+                    #print(x)
                     if len(x)>0:#if x[0] == 'provean':
                         self.annotateByProvean(x,annotationDataRowProvean,finalAnnotationDataProvean,id)
                     else:
@@ -203,7 +203,7 @@ class VarintInfoIO:
             if chekboxValues.__contains__('mvp'):
                 #fabricatedFields.append('dbnsfp.mvp.rankscore, dbnsfp.mvp.score')
                 for x in dictIO.nested_dict_pairs_iterator(dbnsfpVarDic.get('mvp')):
-                    print(x)
+                    #print(x)
                     if len(x)>0:#if x[0] == 'mvp':
                         self.annotateByMVP(x,annotationDataRowMVP,finalAnnotationDataMVP,id)
                     else:
@@ -213,7 +213,7 @@ class VarintInfoIO:
             if chekboxValues.__contains__('polyphen2hvar'):
                 #fabricatedFields.append('dbnsfp.polyphen2.hvar.pred, dbnsfp.polyphen2.hvar.rankscore,dbnsfp.polyphen2.hvar.score')
                 for x in dictIO.nested_dict_pairs_iterator(dbnsfpVarDic.get('polyphen2')): #Polyphen2hdiv
-                    print(x)
+                    #print(x)
                     if x[0] == 'hvar':
                         self.annotateByPolyphen2hvar(x,annotationDataRowPolyphen2hvar,finalAnnotationDataPolyphen2hvar,id)
                     else:
@@ -223,7 +223,7 @@ class VarintInfoIO:
             if chekboxValues.__contains__('polyphen2hdiv'):
                 #fabricatedFields.append('dbnsfp.polyphen2.hdiv.pred,dbnsfp.polyphen2.hdiv.rankscore,dbnsfp.polyphen2.hdiv.score')
                 for x in dictIO.nested_dict_pairs_iterator(dbnsfpVarDic.get('polyphen2')): #Polyphen2hdiv
-                    print(x)
+                    #print(x)
                     if x[0] == 'hdiv':
                         self.annotateByPolyphen2hdiv(x,annotationDataRowPolyphen2hdiv,finalAnnotationDataPolyphen2hdiv,id)
                     else:
@@ -233,7 +233,7 @@ class VarintInfoIO:
             if chekboxValues.__contains__('primateai'):
                 #fabricatedFields.append('dbnsfp.primateai.pred, dbnsfp.primateai.rankscore, dbnsfp.primateai.score')
                 for x in dictIO.nested_dict_pairs_iterator(dbnsfpVarDic.get('primateai')):
-                    print(x)
+                    #print(x)
                     if len(x)>0:#if x[0] == 'primateai':
                         self.annotateByPrimateai(x,annotationDataRowPrimateai,finalAnnotationDataPrimateai,id)
                     else:
@@ -374,7 +374,7 @@ class VarintInfoIO:
             if chekboxValues.__contains__('bdeladdaf'):
                 #fabricatedFields.append('dbnsfp.bayesdel.add_af.pred, dbnsfp.bayesdel.add_af.rankscore,dbnsfp.bayesdel.add_af.score')
                 for x in dictIO.nested_dict_pairs_iterator(dbnsfpVarDic.get('bayesdel')):
-                    print(x)
+                    #print(x)
                     if len(x) > 0:  # if x[0] == 'primateai':
                         self.annotateByBdeladdaf(x, annotationDataRowBdeladdaf, finalAnnotationDataBdeladdaf, id)
                     else:
@@ -393,27 +393,63 @@ class VarintInfoIO:
                     bdelnoafFile='media/' + str(uuid.uuid4()) +'_bdelnoaf' + '.csv'
 
             if chekboxValues.__contains__('vest4'):
-                fabricatedFields.append('dbnsfp.vest4.rankscore,dbnsfp.vest4.score')
+                #fabricatedFields.append('dbnsfp.vest4.rankscore,dbnsfp.vest4.score')
+                for x in dictIO.nested_dict_pairs_iterator(dbnsfpVarDic.get('vest4')):
+                    # print(x)
+                    if len(x) > 0:  # if x[0] == 'primateai':
+                        self.annotateByVest4(x, annotationDataRowVest4, finalAnnotationDataVest4, id)
+                    else:
+                        self.variantNotFound['vest4' + str(loopCount)] = id
                 if loopCount==0:
                     vest4File='media/' + str(uuid.uuid4()) +'_vest4' + '.csv'
             if chekboxValues.__contains__('dann'):
-                fabricatedFields.append('dbnsfp.dann.rankscore, dbnsfp.dann.score')
+                #fabricatedFields.append('dbnsfp.dann.rankscore, dbnsfp.dann.score')
+                for x in dictIO.nested_dict_pairs_iterator(dbnsfpVarDic.get('dann')):
+                    # print(x)
+                    if len(x) > 0:  # if x[0] == 'primateai':
+                        self.annotateByDann(x, annotationDataRowDann, finalAnnotationDataDann, id)
+                    else:
+                        self.variantNotFound['dann' + str(loopCount)] = id
                 if loopCount==0:
                     dannFile='media/' + str(uuid.uuid4()) +'_dann' + '.csv'
-            if chekboxValues.__contains__('eigen'):
-                fabricatedFields.append('dbnsfp.eigen.raw_coding, dbnsfp.eigen.raw_coding_rankscore')
+            if chekboxValues.__contains__('eign'):
+                #fabricatedFields.append('dbnsfp.eigen.raw_coding, dbnsfp.eigen.raw_coding_rankscore')
+                for x in dictIO.nested_dict_pairs_iterator(dbnsfpVarDic.get('eigen')):
+                    # print(x)
+                    if len(x) > 0:  # if x[0] == 'primateai':
+                        self.annotateByEigen(x, annotationDataRowEigen, finalAnnotationDataEigen, id)
+                    else:
+                        self.variantNotFound['eigen' + str(loopCount)] = id
                 if loopCount==0:
                     eigenFile='media/' + str(uuid.uuid4()) +'_eigen' + '.csv'
             if chekboxValues.__contains__('eigenpc'):
-                fabricatedFields.append('dbnsfp.eigen-pc.raw_coding, dbnsfp.eigen-pc.raw_coding_rankscore')
+                #fabricatedFields.append('dbnsfp.eigen-pc.raw_coding, dbnsfp.eigen-pc.raw_coding_rankscore')
+                for x in dictIO.nested_dict_pairs_iterator(dbnsfpVarDic.get('eigen-pc')):
+                    # print(x)
+                    if len(x) > 0:  # if x[0] == 'primateai':
+                        self.annotateByEigenpc(x, annotationDataRowEigenpc, finalAnnotationDataEigenpc, id)
+                    else:
+                        self.variantNotFound['eigenpc' + str(loopCount)] = id
                 if loopCount==0:
                     eigenpcFile='media/' + str(uuid.uuid4()) +'_eigenpc' + '.csv'
             if chekboxValues.__contains__('doegen2'):
-                fabricatedFields.append('dbnsfp.deogen2.pred,dbnsfp.deogen2.rankscore, dbnsfp.deogen2.score')
+                #fabricatedFields.append('dbnsfp.deogen2.pred,dbnsfp.deogen2.rankscore, dbnsfp.deogen2.score')
+                for x in dictIO.nested_dict_pairs_iterator(dbnsfpVarDic.get('deogen2')):
+                    # print(x)
+                    if len(x) > 0:  # if x[0] == 'primateai':
+                        self.annotateByDoegen2(x, annotationDataRowDoegen2, finalAnnotationDataDoegen2, id)
+                    else:
+                        self.variantNotFound['doegen2' + str(loopCount)] = id
                 if loopCount==0:
                     doegen2File='media/' + str(uuid.uuid4()) +'_doegen2' + '.csv'
             if chekboxValues.__contains__('genocanyon'):
-                fabricatedFields.append('dbnsfp.genocanyon.rankscore,dbnsfp.genocanyon.score')
+                #fabricatedFields.append('dbnsfp.genocanyon.rankscore,dbnsfp.genocanyon.score')
+                for x in dictIO.nested_dict_pairs_iterator(dbnsfpVarDic.get('genocanyon')):
+                    # print(x)
+                    if len(x) > 0:  # if x[0] == 'primateai':
+                        self.annotateByGenocanyon(x, annotationDataRowGenocanyon, finalAnnotationDataGenocanyon, id)
+                    else:
+                        self.variantNotFound['genocanyon' + str(loopCount)] = id
                 if loopCount==0:
                     genocanyonFile='media/' + str(uuid.uuid4()) +'_genocanyon' + '.csv'
             annotationData=mv.getvariant(id, fields=fabricatedFields)
@@ -474,7 +510,7 @@ class VarintInfoIO:
             self.dataNotFound.append('mutpred')
         if len(finalAnnotationDataMtaster) > 0:
             fieldnames = ['rsid', 'Converted Rankscore', 'Score', 'Prediction']
-            print('finalAnnotationDataMtaster== ',finalAnnotationDataMtaster)
+            #print('finalAnnotationDataMtaster== ',finalAnnotationDataMtaster)
             csvfw.writeAnnotationDateCSV(finalAnnotationDataMtaster, mtasterFile, fieldnames)
         else:
             self.dataNotFound.append('mtaster')  # 'finalAnnotationDataMtaster'
@@ -533,6 +569,42 @@ class VarintInfoIO:
             csvfw.writeAnnotationDateCSV(finalAnnotationDataBdelnoaf, bdelnoafFile, fieldnames)
         else:
             self.dataNotFound.append('bdelnoaf')
+
+        if len(finalAnnotationDataVest4) > 0:
+            fieldnames = ['rsid', 'Rankscore', 'Score']
+            csvfw.writeAnnotationDateCSV(finalAnnotationDataVest4, vest4File, fieldnames)
+        else:
+            self.dataNotFound.append('vest4')
+
+        if len(finalAnnotationDataDann) > 0:
+            fieldnames = ['rsid', 'Rankscore', 'Score']
+            csvfw.writeAnnotationDateCSV(finalAnnotationDataDann, dannFile, fieldnames)
+        else:
+            self.dataNotFound.append('dann')
+
+        if len(finalAnnotationDataDoegen2) > 0:
+            fieldnames = ['rsid', 'Rankscore', 'Score', 'Prediction']
+            csvfw.writeAnnotationDateCSV(finalAnnotationDataDoegen2, doegen2File, fieldnames)
+        else:
+            self.dataNotFound.append('doegen2')
+
+        if len(finalAnnotationDataGenocanyon) > 0:
+            fieldnames = ['rsid', 'Rankscore', 'Score']
+            csvfw.writeAnnotationDateCSV(finalAnnotationDataGenocanyon, genocanyonFile, fieldnames)
+        else:
+            self.dataNotFound.append('genocanyon')
+
+        if len(finalAnnotationDataEigen) > 0:
+            fieldnames = ['rsid', 'Phred Coding', 'Raw Coding','Raw Coding Rankscore' ]
+            csvfw.writeAnnotationDateCSV(finalAnnotationDataEigen, eigenFile, fieldnames)
+        else:
+            self.dataNotFound.append('eigen')
+
+        if len(finalAnnotationDataEigenpc) > 0:
+            fieldnames = ['rsid', 'Phred Coding', 'Raw Coding','Raw Coding Rankscore' ]
+            csvfw.writeAnnotationDateCSV(finalAnnotationDataEigenpc, eigenpcFile, fieldnames)
+        else:
+            self.dataNotFound.append('eigenpc')
         ###ends parseMyVarinats
     def annotateBySift(self, x, annotationDataRowSift,finalAnnotationDataSift,id):
         if x[0] == 'pred':
@@ -838,3 +910,69 @@ class VarintInfoIO:
                 annotationDataRowBdelnoaf.insert(0, id)
                 finalAnnotationDataBdelnoaf.append(annotationDataRowBdelnoaf.copy())
                 annotationDataRowBdelnoaf.clear()
+    def annotateByVest4(self, x, annotationDataRowVest4, finalAnnotationDataVest4, id):
+        if x[0] == 'rankscore':
+            annotationDataRowVest4.insert(0, x[1])
+        if x[0] == 'score':
+            annotationDataRowVest4.insert(1, x[1])
+        if len(annotationDataRowVest4) == 2:
+            annotationDataRowVest4.insert(0, id)
+            finalAnnotationDataVest4.append(annotationDataRowVest4.copy())
+            annotationDataRowVest4.clear()
+    def annotateByDann(self, x, annotationDataRowDann, finalAnnotationDataDann, id):
+        if x[0] == 'rankscore':
+            annotationDataRowDann.insert(0, x[1])
+        if x[0] == 'score':
+            annotationDataRowDann.insert(1, x[1])
+        if len(annotationDataRowDann) == 2:
+            annotationDataRowDann.insert(0, id)
+            finalAnnotationDataDann.append(annotationDataRowDann.copy())
+            annotationDataRowDann.clear()
+
+    def annotateByEigen(self, x, annotationDataRowEigen, finalAnnotationDataEigen, id):
+        if x[0] == 'phred_coding':
+            annotationDataRowEigen.insert(0, x[1])
+        if x[0] == 'raw_coding':
+            annotationDataRowEigen.insert(1, x[1])
+        if x[0] == 'raw_coding_rankscore':
+            annotationDataRowEigen.insert(2, x[1])
+        if len(annotationDataRowEigen) == 3:
+            annotationDataRowEigen.insert(0, id)
+            finalAnnotationDataEigen.append(annotationDataRowEigen.copy())
+            annotationDataRowEigen.clear()
+
+    def annotateByEigenpc(self, x, annotationDataRowEigenpc, finalAnnotationDataEigenpc, id):
+        if x[0] == 'phred_coding':
+            annotationDataRowEigenpc.insert(0, x[1])
+        if x[0] == 'raw_coding':
+            annotationDataRowEigenpc.insert(1, x[1])
+        if x[0] == 'raw_coding_rankscore':
+            annotationDataRowEigenpc.insert(2, x[1])
+        if len(annotationDataRowEigenpc) == 3:
+            annotationDataRowEigenpc.insert(0, id)
+            finalAnnotationDataEigenpc.append(annotationDataRowEigenpc.copy())
+            annotationDataRowEigenpc.clear()
+
+    def annotateByDoegen2(self, x, annotationDataRowDoegen2, finalAnnotationDataDoegen2, id):
+        if x[0] == 'pred':
+            if x[1] == 'T':
+                annotationDataRowDoegen2.insert(2, 'Tolerant')
+            else:
+                annotationDataRowDoegen2.insert(2, 'Damaging')
+        if x[0] == 'rankscore':
+            annotationDataRowDoegen2.insert(0, x[1])
+        if x[0] == 'score':
+            annotationDataRowDoegen2.insert(1, x[1])
+        if len(annotationDataRowDoegen2) == 3:
+            annotationDataRowDoegen2.insert(0, id)
+            finalAnnotationDataDoegen2.append(annotationDataRowDoegen2.copy())
+            annotationDataRowDoegen2.clear()
+    def annotateByGenocanyon(self, x, annotationDataRowGenocanyon, finalAnnotationDataGenocanyon, id):
+        if x[0] == 'rankscore':
+            annotationDataRowGenocanyon.insert(0, x[1])
+        if x[0] == 'score':
+            annotationDataRowGenocanyon.insert(1, x[1])
+        if len(annotationDataRowGenocanyon) == 2:
+            annotationDataRowGenocanyon.insert(0, id)
+            finalAnnotationDataGenocanyon.append(annotationDataRowGenocanyon.copy())
+            annotationDataRowGenocanyon.clear()
