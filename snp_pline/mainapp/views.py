@@ -40,7 +40,7 @@ def vardataretrievalprocessing(request):
         givenTerm = request.POST.get('genId')
         fabricatedTerm = givenTerm + ' AND missense variant[Function_Class]'
         Entrez.email = "usman.athar@gmail.com"
-        handle = Entrez.esearch(db="snp", term=fabricatedTerm, retmax=5)
+        handle = Entrez.esearch(db="snp", term=fabricatedTerm, retmax=10)
         variantData = Entrez.read(handle)
         totalSNPs = variantData['Count']
         varids = variantData["IdList"]
@@ -77,6 +77,7 @@ def vardataretrievalprocessing(request):
             global grch37_filename
             grch37_filename = 'media/' + str(uuid.uuid4()) + '_GRCh37' + '.csv'
             csvfw.writeGRch37VarDataCSV(grch37vardatainstance.chr_coord_list, grch37_filename)
+            #print('grch37vardatainstance.hgvs37Ids==', grch37vardatainstance.hgvs37Ids)
             #excelrw.writeGRch37VarDataInExcel(grch37vardatainstance.chr_coord_list, grch37_filename)
 
             grch37B=True
@@ -114,28 +115,57 @@ def vardataretrievalprocessing(request):
     return render(request, 'rsids.html', context)
 
 #annotate variants using myvariantinfo restful api
+varInfoIO='';
 def annotateVariants(request):
 
     if request.method == 'POST':
         givenTerm = request.POST.get('genId')
         fabricatedTerm = givenTerm + ' AND missense variant[Function_Class]'
+        global varInfoIO
         varInfoIO=VarintInfoIO()
         varInfoIO.parseMyVarinats(request,fabricatedTerm)
+        selectedTools=varInfoIO.chekboxValues
+        print('selectedTools== ',selectedTools)
 
-        '''
 
-
-            rsIdsB=True
     context = {
 
         'gene': givenTerm,
-        'totalSNPs':totalSNPs,
+        'totalSNPs': varInfoIO.totalSNPs,
+        'sift':varInfoIO.isSift,
+        'sift4g': varInfoIO.isSift4G,
+        'provean': varInfoIO.isProvean,
+        'mvp':varInfoIO.isMVP,
+        'polyphen2HVAR':varInfoIO.isPolyphen2HVAR,
+        'polyphen2HDIV':varInfoIO.isPolyphen2HDIV,
+        'primateAI':varInfoIO.isPrimateAI,
+        'revel':varInfoIO.isRevel,
+        'mpc':varInfoIO.isMPC,
+        'mutpred':varInfoIO.isMutPred,
+        'mtaster':varInfoIO.isMTaster,
+        'massessor':varInfoIO.isMAssessor,
+        'mrnn':varInfoIO.isMRNN,
+        'msvm':varInfoIO.isMSVM,
+        'mlr':varInfoIO.isMLR,
+        'mcap':varInfoIO.isMCAP,
+        'ls2':varInfoIO.isLS2,
+        'fathmm':varInfoIO.isFATHMM,
+        'fxf':varInfoIO.isFXF,
+        'fkml':varInfoIO.isFMKL,
+        'bdeladdaf':varInfoIO.isBDelAddAF,
+        'bdelnoaf':varInfoIO.isBDelNoAF,
+        'vest4':varInfoIO.isVest4,
+        'dann':varInfoIO.isDANN,
+        'eigen':varInfoIO.isEigen,
+        'eigenpc':varInfoIO.isEigenPC,
+        'deogen2':varInfoIO.isDeogen2,
+        'genocanyon':varInfoIO.isGenoCanyon,
+        'pathogenicVarsLen':len(varInfoIO.pathogenicVariants),
+        'varsNotFoundLen': len(varInfoIO.varDataNotFound),
 
+    }
+    return render(request, 'varAnnotationDownloand.html', context)
 
-
-       }
-    return render(request, 'rsids.html', context)
-    '''
 
 def entrezIdSummaryInfo(givenId):
     print("givenId : ",givenId)
@@ -212,6 +242,105 @@ def downloadProteinDataFile(request):
     fDownload=FileDownload()
     return fDownload.download_file(request, '/'+  prot_var_data_filename)
 
+def downloadVarAnnotation(request, tool):
+    global varInfoIO
+    match tool:
+        case 'sift':
+            fDownload = FileDownload()
+            return fDownload.download_file(request, '/' + varInfoIO.siftFile)
+        case 'sift4g':
+            fDownload = FileDownload()
+            return fDownload.download_file(request, '/' + varInfoIO.sift4gFile)
+        case 'provean':
+            fDownload = FileDownload()
+            return fDownload.download_file(request, '/' + varInfoIO.proveanFile)
+        case 'mvp':
+            fDownload = FileDownload()
+            return fDownload.download_file(request, '/' + varInfoIO.mvpFile)
+        case 'polyphen2hvar':
+            fDownload = FileDownload()
+            return fDownload.download_file(request, '/' + varInfoIO.polyphen2hvarFile)
+        case 'polyphen2hdiv':
+            fDownload = FileDownload()
+            return fDownload.download_file(request, '/' + varInfoIO.polyphen2hdivFile)
+        case 'primateai':
+            fDownload = FileDownload()
+            return fDownload.download_file(request, '/' + varInfoIO.primateaiFile)
+        case 'revel':
+            fDownload = FileDownload()
+            return fDownload.download_file(request, '/' + varInfoIO.revelFile)
+        case 'mpc':
+            fDownload = FileDownload()
+            return fDownload.download_file(request, '/' + varInfoIO.mpcFile)
+        case 'mutpred':
+            fDownload = FileDownload()
+            return fDownload.download_file(request, '/' + varInfoIO.mutpredFile)
+        case 'mtaster':
+            fDownload = FileDownload()
+            return fDownload.download_file(request, '/' + varInfoIO.mtasterFile)
+        case 'massessor':
+            fDownload = FileDownload()
+            return fDownload.download_file(request, '/' + varInfoIO.massessorFile)
+        case 'mrnn':
+            fDownload = FileDownload()
+            return fDownload.download_file(request, '/' + varInfoIO.mrnnFile)
+        case 'msvm':
+            fDownload = FileDownload()
+            return fDownload.download_file(request, '/' + varInfoIO.msvmFile)
+        case 'mrl':
+            fDownload = FileDownload()
+            return fDownload.download_file(request, '/' + varInfoIO.mlrFile)
+        case 'mcap':
+            fDownload = FileDownload()
+            return fDownload.download_file(request, '/' + varInfoIO.mcapFile)
+        case 'ls2':
+            fDownload = FileDownload()
+            return fDownload.download_file(request, '/' + varInfoIO.ls2File)
+        case 'fathmm':
+            fDownload = FileDownload()
+            return fDownload.download_file(request, '/' + varInfoIO.fathmmFile)
+        case 'fxf':
+            fDownload = FileDownload()
+            return fDownload.download_file(request, '/' + varInfoIO.fxfFile)
+        case 'fkml':
+            fDownload = FileDownload()
+            return fDownload.download_file(request, '/' + varInfoIO.fmklFile)
+        case 'bdeladdaf':
+            fDownload = FileDownload()
+            return fDownload.download_file(request, '/' + varInfoIO.bdeladdafFile)
+        case 'bdelnoaf':
+            fDownload = FileDownload()
+            return fDownload.download_file(request, '/' + varInfoIO.bdelnoafFile)
+        case 'vest4':
+            fDownload = FileDownload()
+            return fDownload.download_file(request, '/' + varInfoIO.vest4File)
+        case 'dann':
+            fDownload = FileDownload()
+            return fDownload.download_file(request, '/' + varInfoIO.dannFile)
+        case 'eigen':
+            fDownload = FileDownload()
+            return fDownload.download_file(request, '/' + varInfoIO.eigenFile)
+        case 'eigenpc':
+            fDownload = FileDownload()
+            return fDownload.download_file(request, '/' + varInfoIO.eigenpcFile)
+        case 'deogen2':
+            fDownload = FileDownload()
+            return fDownload.download_file(request, '/' + varInfoIO.doegen2File)
+        case 'genocanyon':
+            fDownload = FileDownload()
+            return fDownload.download_file(request, '/' + varInfoIO.genocanyonFile)
+        case 'genocanyon':
+            fDownload = FileDownload()
+            return fDownload.download_file(request, '/' + varInfoIO.genocanyonFile)
+        case 'pathogenicvarsfound':
+            fDownload = FileDownload()
+            return fDownload.download_file(request, '/' + varInfoIO.pathogenicVarFile)
+        case 'varsnotfound':
+            fDownload = FileDownload()
+            return fDownload.download_file(request, '/' + varInfoIO.variantNotFoundFile)
 
-
+        case _:
+            print('No tool selected')
+def selectedVarsDataRetrieval():
+    print('selectedVarsDataRetrieval')
 

@@ -1,0 +1,133 @@
+{% load static %}
+
+<html lang="en">
+<head>
+
+     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>snp pipeline</title>
+    <link rel="stylesheet" href="{% static 'assets/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/fonts/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/animate.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/Dark-NavBar-Navigation-with-Button.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/Dark-NavBar-Navigation-with-Search.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/Dark-NavBar.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/Footer-Dark-icons.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/simple-footer.css' %}">
+</head>
+<body>
+
+
+            <div style="height: 80px;color: #ffffff;background: rgba(214,42,40,255); text-align: center" >
+                <h3 >Variant data for Gene/Accession Id {{ gene }} </h3>
+
+            </div>
+
+<br>
+<h3> &nbsp;&nbsp;Total Missense SNPs:  {{ totalSNPs }}</h3><br>
+<div style="text-align: left">
+<ul>
+
+        {% if sift %}
+        <li> Please click <a href={% url 'downloadvarannotation' tool='sift'  %}>here</a> to download results by SIFT </li>
+        {% endif %}
+        {% if sift4g %}
+        <li> Please click <a href={% url 'downloadvarannotation' tool='sift4g'  %}>here</a> to download results by SIFT4G </li>
+        {% endif %}
+        {% if provean %}
+            <li> Please click <a href={% url 'downloadvarannotation' tool='provean'  %}>here</a> to download results by PROVEAN </li>
+        {% endif %}
+        {% if MVP %}
+            <li> Please click <a href={% url 'downloadvarannotation' tool='mvp'  %}>here</a> to download results by MVP </li>
+        {% endif %}
+        {% if polyphen2HVAR %}
+            <li> Please click <a href={% url 'downloadvarannotation' tool='polyphen2hvar'  %}>here</a> to download results by Polyphen2_HVAR </li>
+        {% endif %}
+        {% if polyphen2HDIV %}
+            <li> Please click <a href={% url 'downloadvarannotation' tool='polyphen2hdiv'  %}>here</a> to download results by Polyphen2_HDIV </li>
+        {% endif %}
+        {% if primateAI %}
+            <li> Please click <a href={% url 'downloadvarannotation' tool='primateai'  %}>here</a> to download results by PrimateAI </li>
+        {% endif %}
+        {% if revel %}
+            <li> Please click <a href={% url 'downloadvarannotation' tool='revel'  %}>here</a> to download results by REVEL </li>
+        {% endif %}
+        {% if mpc %}
+            <li> Please click <a href={% url 'downloadvarannotation' tool='mpc'  %}>here</a> to download results by MPC </li>
+        {% endif %}
+        {% if mutpred %}
+            <li> Please click <a href={% url 'downloadvarannotation' tool='mutpred'  %}>here</a> to download results by MutPred </li>
+        {% endif %}
+        {% if mtaster %}
+            <li> Please click <a href={% url 'downloadvarannotation' tool='mtaster'  %}>here</a> to download results by MutationTaster </li>
+        {% endif %}
+        {% if massessor %}
+            <li> Please click <a href={% url 'downloadvarannotation' tool='massessor'  %}>here</a> to download results by MutationAssessor </li>
+        {% endif %}
+        {% if mrnn %}
+            <li> Please click <a href={% url 'downloadvarannotation' tool='mrnn'  %}>here</a> to download results by MetaRNN </li>
+        {% endif %}
+        {% if msvm %}
+            <li> Please click <a href={% url 'downloadvarannotation' tool='msvm'  %}>here</a> to download results by MetaSVM </li>
+        {% endif %}
+         {% if mlr %}
+            <li> Please click <a href={% url 'downloadvarannotation' tool='mrl'  %}>here</a> to download results by MetaLR </li>
+        {% endif %}
+
+        {% if mcap %}
+            <li> Please click <a href={% url 'downloadvarannotation' tool='mcap'  %}>here</a> to download results by M-Cap </li>
+        {% endif %}
+        {% if ls2 %}
+            <li> Please click <a href={% url 'downloadvarannotation' tool='ls2'  %}>here</a> to download results by LIST-S2 </li>
+        {% endif %}
+        {% if fathmm %}
+            <li> Please click <a href={% url 'downloadvarannotation' tool='fathmm'  %}>here</a> to download results by FATHMM </li>
+        {% endif %}
+        {% if fxf %}
+            <li> Please click <a href={% url 'downloadvarannotation' tool='fxf'  %}>here</a> to download results by fathmm-XF </li>
+        {% endif %}
+        {% if fkml %}
+            <li> Please click <a href={% url 'downloadvarannotation' tool='fkml'  %}>here</a> to download results by fathmm-MKL </li>
+        {% endif %}
+        {% if bdeladdaf %}
+            <li> Please click <a href={% url 'downloadvarannotation' tool='bdeladdaf'  %}>here</a> to download results by BayesDel-addAF </li>
+        {% endif %}
+        {% if bdelnoaf %}
+                <li> Please click <a href={% url 'downloadvarannotation' tool='bdelnoaf'  %}>here</a> to download results by BayesDel-noAF </li>
+        {% endif %}
+        {% if vest4 %}
+                <li> Please click <a href={% url 'downloadvarannotation' tool='vest4'  %}>here</a> to download results by VEST4 </li>
+        {% endif %}
+        {% if dann %}
+                <li> Please click <a href={% url 'downloadvarannotation' tool='dann'  %}>here</a> to download results by DANN </li>
+        {% endif %}
+        {% if eigen %}
+                <li> Please click <a href={% url 'downloadvarannotation' tool='eigen'  %}>here</a> to download results by Eigen </li>
+        {% endif %}
+        {% if eigenpc %}
+                <li> Please click <a href={% url 'downloadvarannotation' tool='eigenpc'  %}>here</a> to download results by Eigen-PC </li>
+        {% endif %}
+
+        {% if deogen2 %}
+            <li> Please click <a href={% url 'downloadvarannotation' tool='deogen2'  %}>here</a> to download results by DEOGEN2 </li>
+        {% endif %}
+        {% if genocanyon %}
+            <li> Please click <a href={% url 'downloadvarannotation' tool='genocanyon'  %}>here</a> to download results by GenoCanyon </li>
+        {% endif %}
+        {% if pathogenicVarsLen > 0 %}
+            <li> Please click <a href={% url 'downloadvarannotation' tool='pathogenicvarsfound'  %}>here</a> to download variants declared pathogenic by all selected tools </li>
+        {% else %}
+            <p>No common pathogenic variants found by the selected tools</p>
+        {% endif %}
+        {% if varsNotFoundLen > 0 %}
+            <li> Please click <a href={% url 'downloadvarannotation' tool='varsnotfound'  %}>here</a> to download variants not found by MyVariant Info  </li>
+            <p>would you like to get chromosome coordinates and protein allelic data of these variants? For this
+                <a href={% url 'selectedvarsdataretrieval'  %}>Click here</a></p>
+        {% endif %}
+
+
+</ul>
+
+</div>
+</body>
+</html>

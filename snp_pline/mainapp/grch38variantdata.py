@@ -5,11 +5,12 @@ class Grch38VariantData:
     def __init__(self):
 
         self.chr_coord_list =[]
+        self.hgvs38Ids = []
 
     def parsevardatabystring(self,varData38,  var_id):
         #getting orientation
         chr_coord_list_local = []
-
+        hgvs38_local = []
         orientation_index=varData38.find('orientation":')
         triplebracketsindex=varData38.find('}]}')
 
@@ -31,7 +32,8 @@ class Grch38VariantData:
 
             if a.find('>') > -1:
                 print('a==\n', a)
-                chr_coord_list_local = []
+                chr_coord_list_local.clear()
+                hgvs38_local.clear()
                 '''
                 varData38=str(varData38).lower()
                 print('varData38===after', varData38)
@@ -67,13 +69,18 @@ class Grch38VariantData:
                 altalllele = ncdata[greater_symbol_index + 1:len(ncdata)]
                 #print('altalllele== ', altalllele)
                 chrcooridnates38=str(chr)+','+chrpos+','+orientation+','+orgalllele+'/'+altalllele
+                hgvs38 = 'chr' + str(chr) + ':g.' + chrpos + orgalllele + '>' + altalllele
                 #print('chrcooridnates38== ', chrcooridnates38)
-                chr_coord_list_local.append('rs'+var_id)
+                rsId = 'rs' + var_id
+                chr_coord_list_local.append(rsId)
+                chr_coord_list_local.append(hgvs38)
                 chr_coord_list_local.append(chrcooridnates38)
-                #return chrcooridnates38
-                #print('chr_coord_list38 == ', chr_coord_list)
-                self.chr_coord_list.append(chr_coord_list_local)
-            #['rs'+var_id] = chrcooridnates38 #chr_coord_list
+                self.chr_coord_list.append(chr_coord_list_local.copy())
+
+                hgvs38_local.append(rsId)
+                hgvs38_local.append(hgvs38)
+                self.hgvs38Ids.append(hgvs38_local.copy())
+
 
 
 
