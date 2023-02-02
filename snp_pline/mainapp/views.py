@@ -341,6 +341,6 @@ def downloadVarAnnotation(request, tool):
 
         case _:
             print('No tool selected')
-def selectedVarsDataRetrieval():
+def selectedVarsDataRetrieval(request):
     print('selectedVarsDataRetrieval')
 

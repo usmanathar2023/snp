@@ -25,9 +25,11 @@
 
 <br>
 <h3> &nbsp;&nbsp;Total Missense SNPs:  {{ totalSNPs }}</h3><br>
+
+
 <div style="text-align: left">
 <ul>
-
+        <p><b>Results by the selected tools</b></p>
         {% if sift %}
         <li> Please click <a href={% url 'downloadvarannotation' tool='sift'  %}>here</a> to download results by SIFT </li>
         {% endif %}
@@ -115,13 +117,19 @@
             <li> Please click <a href={% url 'downloadvarannotation' tool='genocanyon'  %}>here</a> to download results by GenoCanyon </li>
         {% endif %}
         {% if pathogenicVarsLen > 0 %}
+            <p><br></p>
+             <p><b>Common pathogenic variants</b></p>
             <li> Please click <a href={% url 'downloadvarannotation' tool='pathogenicvarsfound'  %}>here</a> to download variants declared pathogenic by all selected tools </li>
         {% else %}
+            <p><br></p>
+            <p><b>Common pathogenic variants</b></p>
             <p>No common pathogenic variants found by the selected tools</p>
         {% endif %}
         {% if varsNotFoundLen > 0 %}
-            <li> Please click <a href={% url 'downloadvarannotation' tool='varsnotfound'  %}>here</a> to download variants not found by MyVariant Info  </li>
-            <p>would you like to get chromosome coordinates and protein allelic data of these variants? For this
+            <p><br></p>
+             <p><b>Variants whose data is not found</b></p>
+            Please click <a href={% url 'downloadvarannotation' tool='varsnotfound'  %}>here</a> to download variants not found by MyVariant Info.
+            <p>would you like to get chromosome coordinates and proteomic data of these variants? Yes?
                 <a href={% url 'selectedvarsdataretrieval'  %}>Click here</a></p>
         {% endif %}
 
