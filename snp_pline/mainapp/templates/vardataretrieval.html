@@ -28,11 +28,13 @@ function uncheckAll() {
 
     <section style="background: rgba(245,126,32,255);height: 450px;">
         <div class="container text-center" style="background: rgba(245,126,32,255);color: rgb(255,255,255);width: 1000px;height: 50px;border-style: none;"></div>
-        <form method="post" action="vardataretrieval/vardataretrievalprocessing" enctype="multipart/form-data"   id="varDataRetForm" name="snpprocessingform" target="_blank">
+        <form method="post" action="vardataretrieval/vardataretrievalprocessing"  enctype="multipart/form-data"   id="varDataRetForm" name="snpprocessingform" target="_blank">
             {% csrf_token %}
         <div class="container text-center border rounded-pill border-danger" style="background: rgba(214,42,40,255);color: rgb(255,255,255);width: 1000px;height: 365px;border-style: none;">
+            <input type="hidden" name="varNotFoundTxt", id="varNotFoundTxt" value='noFile'/>
             <br>
              <h2 class="mb-5">Get SNPs data</h2>
+            <input type="hidden" value='noFile'/>
             <div class="row">
                 <div class="col"><label class="form-label">Gen ID:&nbsp;</label><input class="border rounded" type="text" name="genId" style="width: 350px;" required></div>
             </div> <br>
@@ -41,7 +43,7 @@ function uncheckAll() {
             <div class="row">
                 <div class="col"><input type="checkbox" name="chekboxValues" id="select-all" style="border-style: none;" onClick="changeCheckBoxState(this)"><label class="form-label">&nbsp;All&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; </label></div>
                 <div class="col"><label class="form-label">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</label></div>
-                <div class="col"><label class="form-label">&nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</label></div>
+                <div class="col"><label class="form-label">&nbsp;&nbsp;   &nbsp; &nbsp; &nbsp;&nbsp;</label></div>
                 <div class="col"><label class="form-label">&nbsp;</label></div>
             </div>
             <div class="row">

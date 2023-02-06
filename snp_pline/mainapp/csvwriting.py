@@ -27,5 +27,24 @@ class CSVFileWriting:
             writer.writerow(fieldnames)
             writer.writerows(AnnoData)
 
+    def readCSVFile(self, fname):
+        rowData=[]
+        allData=[]
+
+        with open(fname) as csv_file:
+
+            csv_reader = csv.reader(csv_file, delimiter=',')
+            line_count = 0
+            for row in csv_reader:
+
+                if line_count == 0:
+                   line_count += 1
+                else:
+                   # print('row...', row)
+                    allData.append(row)
+                    line_count += 1
+            return allData;
+
+
 
 

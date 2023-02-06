@@ -36,14 +36,37 @@ def vardataretrievalprocessing(request):
     grch38B = False;
     protDataB = False;
     rsIdsB = False
+    varids=[]; givenTerm=''; totalSNPs='';
+    csvfw = CSVFileWriting()
     if request.method == 'POST':
-        givenTerm = request.POST.get('genId')
-        fabricatedTerm = givenTerm + ' AND missense variant[Function_Class]'
-        Entrez.email = "usman.athar@gmail.com"
-        handle = Entrez.esearch(db="snp", term=fabricatedTerm, retmax=10)
-        variantData = Entrez.read(handle)
-        totalSNPs = variantData['Count']
-        varids = variantData["IdList"]
+        fName= request.POST.get('varNotFoundTxt')
+        print('fName...', fName)
+
+        if fName == 'noFile':
+            givenTerm = request.POST.get('genId')
+            fabricatedTerm = givenTerm + ' AND missense variant[Function_Class]'
+            Entrez.email = "usman.athar@gmail.com"
+            handle = Entrez.esearch(db="snp", term=fabricatedTerm, retmax=10)
+            variantData = Entrez.read(handle)
+            totalSNPs = variantData['Count']
+            varids = variantData["IdList"]
+        else:
+            #print('csvfw...', csvfw)
+            givenTerm = str(request.POST.get('genid'))
+            totalSNPs = str(request.POST.get('totsnps'))
+            newfName = 'media/' + fName
+            newfName = newfName.removesuffix('//')
+            print('inside else givenTerm===', givenTerm)
+            print('inside else totalSNPs===', totalSNPs)
+            givenTerm=givenTerm.removesuffix('//')
+            totalSNPs=totalSNPs.removesuffix('//')
+            varData=csvfw.readCSVFile(newfName)
+            for rsIds in varData:
+                rsid=str(rsIds[0])
+                rsid=rsid.removeprefix('rs')
+                #print('rsid==',rsid)
+                varids.append(rsid)
+            #print('inside else...',varids)
         chekboxValues = str(request.POST.getlist('chekboxValues', ''))
         print('chekboxValues=== ', chekboxValues)
         dbsnpvardata = DBSnpVarientDataRetrieval()
@@ -56,7 +79,9 @@ def vardataretrievalprocessing(request):
         refseqid_to_uniprotid = RefSeqId_to_UniProtId()
         count=0; protData=''
         for varid in varids:
+            print('varid==', varid)
             dbsnpvardata_str = dbsnpvardata.getvariantdata(varid)
+            #print('dbsnpvardata_str==', dbsnpvardata_str)
             if chekboxValues.__contains__('grch37'):  #writing GRCh37 chromosome coordinates
                 grch37vardatainstance.parsevardatabystring(dbsnpvardata_str, varid)
             if chekboxValues.__contains__('grch38'): # writing GRCh38 chromosome coordinates in csv format
@@ -77,7 +102,7 @@ def vardataretrievalprocessing(request):
             global grch37_filename
             grch37_filename = 'media/' + str(uuid.uuid4()) + '_GRCh37' + '.csv'
             csvfw.writeGRch37VarDataCSV(grch37vardatainstance.chr_coord_list, grch37_filename)
-            #print('grch37vardatainstance.hgvs37Ids==', grch37vardatainstance.hgvs37Ids)
+            print('grch37vardatainstance.chr_coord==', grch37vardatainstance.chr_coord_list)
             #excelrw.writeGRch37VarDataInExcel(grch37vardatainstance.chr_coord_list, grch37_filename)
 
             grch37B=True
@@ -102,16 +127,28 @@ def vardataretrievalprocessing(request):
             fw.writeFileFromList(rsIds, rsIds_filename)
 
             rsIdsB=True
-    context = {
+    # fName == 'noFile':
+        context = {
 
-        'gene': givenTerm,
-        'totalSNPs':totalSNPs,
-        'grch37B':grch37B,
-        'grch38B':grch38B,
-        'rsIdsB':rsIdsB,
-        'protDataB':protDataB
+            'gene': givenTerm,
+            'totalSNPs':totalSNPs,
+            'grch37B':grch37B,
+            'grch38B':grch38B,
+            'rsIdsB':rsIdsB,
+            'protDataB':protDataB
 
-       }
+           }
+        '''
+   
+        context = {
+
+            'grch37B': grch37B,
+            'grch38B': grch38B,
+            'rsIdsB': rsIdsB,
+            'protDataB': protDataB
+
+        }
+        '''
     return render(request, 'rsids.html', context)
 
 #annotate variants using myvariantinfo restful api
@@ -127,7 +164,9 @@ def annotateVariants(request):
         selectedTools=varInfoIO.chekboxValues
         print('selectedTools== ',selectedTools)
 
-
+    tempvarfile=varInfoIO.variantNotFoundFile[6:]
+    print('varInfoIO.variantNotFoundFile===', varInfoIO.variantNotFoundFile)
+    print('tempvarfile===',tempvarfile)
     context = {
 
         'gene': givenTerm,
@@ -162,6 +201,8 @@ def annotateVariants(request):
         'genocanyon':varInfoIO.isGenoCanyon,
         'pathogenicVarsLen':len(varInfoIO.pathogenicVariants),
         'varsNotFoundLen': len(varInfoIO.varDataNotFound),
+        'varNotFoundFile':tempvarfile,
+                             #varInfoIO.variantNotFoundFile,
 
     }
     return render(request, 'varAnnotationDownloand.html', context)
@@ -342,5 +383,27 @@ def downloadVarAnnotation(request, tool):
         case _:
             print('No tool selected')
 def selectedVarsDataRetrieval(request):
-    print('selectedVarsDataRetrieval')
+    #print('varnotfoundfile==',varFile)
+    fName = request.POST.get('varNotFoundTxt')
+    genId = request.POST.get('genId')
+    totSNPs = request.POST.get('totsnps')
+    print('fName==', fName )
+    print('genId==', genId )
+    print('totSNPS==', totSNPs)
+    context ={
+        'varNotFoundFile':fName,
+        'genId': genId,
+        'totSNPs': totSNPs,
+
+    }
+    return render(request, 'tools_data_retrieval.html',context)
+def selVarDataRetrievalProcessing(request):
+    if request.method == 'POST':
+        fName = request.POST.get('varNotFoundTxt')
+        fName='media/'+fName
+        fName=fName.removesuffix('/')
+
+        return vardataretrievalprocessing(request,fName)
+    #return None
+
 

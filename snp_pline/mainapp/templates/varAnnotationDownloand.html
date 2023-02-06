@@ -126,13 +126,19 @@
             <p>No common pathogenic variants found by the selected tools</p>
         {% endif %}
         {% if varsNotFoundLen > 0 %}
-            <p><br></p>
-             <p><b>Variants whose data is not found</b></p>
-            Please click <a href={% url 'downloadvarannotation' tool='varsnotfound'  %}>here</a> to download variants not found by MyVariant Info.
-            <p>would you like to get chromosome coordinates and proteomic data of these variants? Yes?
-                <a href={% url 'selectedvarsdataretrieval'  %}>Click here</a></p>
-        {% endif %}
+            <form method="post" action="selectedvarsdataretrieval" enctype="multipart/form-data"   id="varAnnotationForm" name="varAnnotationForm" target="_blank">
+                {% csrf_token %}
+                 <input type="hidden" name="varNotFoundTxt", id="varNotFoundTxt" value={{varNotFoundFile}}/>
+                 <input type="hidden" name="genId", id="genId" value={{gene}}/>
+                 <input type="hidden" name="totsnps", id="totsnps" value={{totalSNPs}}/>
 
+                <p><br></p>
+                 <p><b>Variants whose data is not found</b></p>
+                Please click <a href={% url 'downloadvarannotation' tool='varsnotfound'  %}>here</a> to download variants not found by MyVariant Info.
+                <p>Would you like to get chromosome coordinates and proteomic data of these variants? Yes?
+                    <button  type="submit" style="background: black;color: white;font-family: Montserrat, sans-serif;border-style: none;">Click here</button></p>
+            </form>
+        {% endif %}
 
 </ul>
 
