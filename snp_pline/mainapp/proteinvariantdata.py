@@ -7,11 +7,15 @@ class ProteinVariantData:
     def __init__(self):
         self.prot_coord_list = []
         self.prot_var_data_dict={}
+        self.protein_ids = []
 
     def parsevardatabystring(self, varData):
+        #print('varData\n',varData)
         # getting orientation
-        chr_coord_list = []
-        index=0; index2=0;protein_id='';position=0;original_allele='';mutant_allele='';
+        self.prot_coord_list = []
+        self.prot_var_data_dict = {}
+        self.protein_ids = []
+        index=0; index2=0;position=0;original_allele='';mutant_allele='';
         index = varData.find('{"allele": {"spdi": {"seq_id": "NP_')
         while index > -1:
             #getting string having protein variant data information
@@ -20,7 +24,7 @@ class ProteinVariantData:
             varData=varData[:index2+5]
             index=varData.find('NP_')
             index2=varData.find(',')
-            protein_id=varData[index:index2-1]
+            self.protein_ids.append(varData[index:index2-1])
             varData=varData[index2+1:]
             index=varData.find(':')
             index2 = varData.find(',')
@@ -39,10 +43,12 @@ class ProteinVariantData:
                 continue
             prot_coord=original_allele+str(position)+ mutant_allele
             print('prot_coord== ', prot_coord)
-            self. prot_coord_list.append(prot_coord)
+            if not prot_coord in self.prot_coord_list:
+                self. prot_coord_list.append(prot_coord)
             #print("varData last== ", varData)
         self.prot_var_data_dict['protCoord']=self.prot_coord_list
-        self.prot_var_data_dict['refSeqProtId']=protein_id
+        self.prot_var_data_dict['refSeqProtId']=self.protein_ids
+
             # return chrcooridnates38
 
 

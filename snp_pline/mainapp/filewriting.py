@@ -8,7 +8,8 @@ class FileWriting:
     def writeProteinData(self, protData,prot_var_data_dict,prot_var_data_filename):
         with open(prot_var_data_filename, 'w') as fp:
             fp.write(protData)
-            fp.write('\nRefSeq_Protein Id: \n'+prot_var_data_dict['refSeqProtId'])
+            protein_ids=prot_var_data_dict['refSeqProtId']
+            fp.write('\nRefSeq_Protein Id: \n'+protein_ids[0])
             fp.write('\nProtein Allelic Data:\n')
             fp.write('\n'.join(prot_var_data_dict['protCoord']))
 

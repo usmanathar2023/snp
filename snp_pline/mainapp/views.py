@@ -46,7 +46,7 @@ def vardataretrievalprocessing(request):
             givenTerm = request.POST.get('genId')
             fabricatedTerm = givenTerm + ' AND missense variant[Function_Class]'
             Entrez.email = "usman.athar@gmail.com"
-            handle = Entrez.esearch(db="snp", term=fabricatedTerm, retmax=10)
+            handle = Entrez.esearch(db="snp", term=fabricatedTerm, retmax=1)
             variantData = Entrez.read(handle)
             totalSNPs = variantData['Count']
             varids = variantData["IdList"]
@@ -87,9 +87,10 @@ def vardataretrievalprocessing(request):
             if chekboxValues.__contains__('grch38'): # writing GRCh38 chromosome coordinates in csv format
                 grch38vardatainstance.parsevardatabystring(dbsnpvardata_str, varid)
             if chekboxValues.__contains__('protdata'):
-                if count==0:
-                    protData=refseqid_to_uniprotid.get_uniprotid_from_refseqid(givenTerm)
                 prot_var_data.parsevardatabystring(dbsnpvardata_str)
+                if count==0:
+                    protData=refseqid_to_uniprotid.get_uniprotid_from_refseqid(givenTerm,prot_var_data.prot_var_data_dict['refSeqProtId'])
+
             if chekboxValues.__contains__('rsids'):
                 id = 'rs' + str(varid)
                 #query='http://www.mulinlab.org/vportal/portal/api?q=' + id + '&g=hg19&p=eur&f=pathogenicity'
