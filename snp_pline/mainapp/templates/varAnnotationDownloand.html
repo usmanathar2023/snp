@@ -1,121 +1,243 @@
 {% load static %}
+{% load mathfilters %}
 
 <html lang="en">
 <head>
 
      <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>snp pipeline</title>
+    <meta name="var-annotation-download-table" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Download your desired data</title>
+    <link rel="stylesheet" href="{% static 'assets/fonts/font-awesome.min.css' %}"/>
     <link rel="stylesheet" href="{% static 'assets/bootstrap/css/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/fonts/font-awesome.min.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/css/animate.min.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/css/Dark-NavBar-Navigation-with-Button.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/css/Dark-NavBar-Navigation-with-Search.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/css/Dark-NavBar.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/css/Footer-Dark-icons.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/css/simple-footer.css' %}">
+     <link rel="stylesheet" href="{% static 'assets/css/var-annotation-download.css' %}"/>
 </head>
 <body>
 
 
             <div style="height: 80px;color: #ffffff;background: rgba(214,42,40,255); text-align: center" >
-                <h3 >Variant data for Gene/Accession Id {{ gene }} </h3>
+                <h3 >Annonation of variants by the selected tools for {{ gene }} gene</h3>
 
             </div>
 
 <br>
-<h3> &nbsp;&nbsp;Total Missense SNPs:  {{ totalSNPs }}</h3><br>
+<h3> &nbsp;Total Missense SNPs:  {{ totalSNPs }}</h3><br>
 
+<div style="text-align: right">
+    click <a href={% url 'downloadvarannotation' tool='table'  %}>here</a> to download this table </td>
 
-<div style="text-align: left">
-<ul>
-        <p><b>Results by the selected tools</b></p>
+</div>
+<table style="margin-left: auto; margin-right: auto">
+
+  <thead>
+    <tr>
+      <th scope="col">File to download </th>
+      <th scope="col">Pathogenic variants</th>
+
+      <th scope="col">Non pathogenic variants</th>
+    </tr>
+  </thead>
+
+<tbody>
         {% if sift %}
-        <li> Please click <a href={% url 'downloadvarannotation' tool='sift'  %}>here</a> to download results by SIFT </li>
+            <tr>
+                <td> Please click <a href={% url 'downloadvarannotation' tool='sift'  %}>here</a> to download results by SIFT </td>
+                <td> {{ pvarsbysift }} </td>
+                 <td> {{ totalSNPs|sub:pvarsbysift }} </td>
+            </tr>
         {% endif %}
         {% if sift4g %}
-        <li> Please click <a href={% url 'downloadvarannotation' tool='sift4g'  %}>here</a> to download results by SIFT4G </li>
+            <tr>
+                <td> Please click <a href={% url 'downloadvarannotation' tool='sift4g'  %}>here</a> to download results by SIFT4G </td>
+                <td> {{ pvarsbysift4g }} </td>
+                 <td> {{ totalSNPs|sub:pvarsbysift4g }} </td>
+            </tr>
         {% endif %}
         {% if provean %}
-            <li> Please click <a href={% url 'downloadvarannotation' tool='provean'  %}>here</a> to download results by PROVEAN </li>
+            <tr>
+                <td> Please click <a href={% url 'downloadvarannotation' tool='provean'  %}>here</a> to download results by PROVEAN </td>
+                <td> {{ pvarsbyprovean }} </td>
+                 <td> {{ totalSNPs|sub:pvarsbyprovean }} </td>
+            </tr>
         {% endif %}
-        {% if MVP %}
-            <li> Please click <a href={% url 'downloadvarannotation' tool='mvp'  %}>here</a> to download results by MVP </li>
+        {% if mvp %}
+            <tr>
+                <td> Please click <a href={% url 'downloadvarannotation' tool='mvp'  %}>here</a> to download results by MVP </td>
+                <td> {{ pvarsbymvp }} </td>
+                <td> {{ totalSNPs|sub:pvarsbymvp }} </td>
+            </tr>
         {% endif %}
         {% if polyphen2HVAR %}
-            <li> Please click <a href={% url 'downloadvarannotation' tool='polyphen2hvar'  %}>here</a> to download results by Polyphen2_HVAR </li>
+            <tr>
+                <td> Please click <a href={% url 'downloadvarannotation' tool='polyphen2hvar'  %}>here</a> to download results by Polyphen2_HVAR </td>
+                <td> {{ pvarsbypolyphen2hvar }} </td>
+                <td> {{ totalSNPs|sub:pvarsbypolyphen2hvar }} </td>
+            </tr>
         {% endif %}
         {% if polyphen2HDIV %}
-            <li> Please click <a href={% url 'downloadvarannotation' tool='polyphen2hdiv'  %}>here</a> to download results by Polyphen2_HDIV </li>
+             <tr>
+                 <td> Please click <a href={% url 'downloadvarannotation' tool='polyphen2hdiv'  %}>here</a> to download results by Polyphen2_HDIV </td>
+                 <td> {{ pvarsbypolyphen2hdiv }} </td>
+                 <td> {{ totalSNPs|sub:pvarsbypolyphen2hdiv }} </td>
+            </tr>
         {% endif %}
         {% if primateAI %}
-            <li> Please click <a href={% url 'downloadvarannotation' tool='primateai'  %}>here</a> to download results by PrimateAI </li>
+            <tr>
+                <td> Please click <a href={% url 'downloadvarannotation' tool='primateai'  %}>here</a> to download results by PrimateAI </td>
+                <td> {{ pvarsbyprimateai }} </td>
+                <td> {{ totalSNPs|sub:pvarsbyprimateai }} </td>
+            </tr>
         {% endif %}
         {% if revel %}
-            <li> Please click <a href={% url 'downloadvarannotation' tool='revel'  %}>here</a> to download results by REVEL </li>
+            <tr>
+                <td> Please click <a href={% url 'downloadvarannotation' tool='revel'  %}>here</a> to download results by REVEL </td>
+                <td> {{ pvarsbyrevel }} </td>
+                <td> {{ totalSNPs|sub:pvarsbyrevel }} </td>
+            </tr>
         {% endif %}
         {% if mpc %}
-            <li> Please click <a href={% url 'downloadvarannotation' tool='mpc'  %}>here</a> to download results by MPC </li>
+            <tr>
+                <td> Please click <a href={% url 'downloadvarannotation' tool='mpc'  %}>here</a> to download results by MPC </td>
+                <td> {{ pvarsbympc }} </td>
+                <td> {{ totalSNPs|sub:pvarsbympc }} </td>
+            </tr>
         {% endif %}
         {% if mutpred %}
-            <li> Please click <a href={% url 'downloadvarannotation' tool='mutpred'  %}>here</a> to download results by MutPred </li>
+            <tr>
+                <td> Please click <a href={% url 'downloadvarannotation' tool='mutpred'  %}>here</a> to download results by MutPred </td>
+                <td> {{ pvarsbymutpred }} </td>
+                <td> {{ totalSNPs|sub:pvarsbymutpred }} </td>
+            </tr>
         {% endif %}
         {% if mtaster %}
-            <li> Please click <a href={% url 'downloadvarannotation' tool='mtaster'  %}>here</a> to download results by MutationTaster </li>
+            <tr>
+                <td> Please click <a href={% url 'downloadvarannotation' tool='mtaster'  %}>here</a> to download results by MutationTaster </td>
+                <td> {{ pvarsbymtaster }} </td>
+                <td> {{ totalSNPs|sub:pvarsbymtaster }} </td>
+            </tr>
         {% endif %}
         {% if massessor %}
-            <li> Please click <a href={% url 'downloadvarannotation' tool='massessor'  %}>here</a> to download results by MutationAssessor </li>
+            <tr>
+                <td> Please click <a href={% url 'downloadvarannotation' tool='massessor'  %}>here</a> to download results by MutationAssessor </td>
+                <td> {{ pvarsbymassessor }} </td>
+                <td> {{ totalSNPs|sub:pvarsbymassessor }} </td>
+            </tr>
         {% endif %}
         {% if mrnn %}
-            <li> Please click <a href={% url 'downloadvarannotation' tool='mrnn'  %}>here</a> to download results by MetaRNN </li>
+            <tr>
+                <td> Please click <a href={% url 'downloadvarannotation' tool='mrnn'  %}>here</a> to download results by MetaRNN </td>
+                <td> {{ pvarsbymrnn }} </td>
+                <td> {{ totalSNPs|sub:pvarsbymrnn }} </td>
+            </tr>
         {% endif %}
         {% if msvm %}
-            <li> Please click <a href={% url 'downloadvarannotation' tool='msvm'  %}>here</a> to download results by MetaSVM </li>
+            <tr>
+                <td> Please click <a href={% url 'downloadvarannotation' tool='msvm'  %}>here</a> to download results by MetaSVM </td>
+                <td> {{ pvarsbymsvm }} </td>
+                <td> {{ totalSNPs|sub:pvarsbymsvm }} </td>
+            </tr>
         {% endif %}
          {% if mlr %}
-            <li> Please click <a href={% url 'downloadvarannotation' tool='mrl'  %}>here</a> to download results by MetaLR </li>
+             <tr>
+                <td> Please click <a href={% url 'downloadvarannotation' tool='mrl'  %}>here</a> to download results by MetaLR </td>
+                <td> {{ pvarsbymlr }} </td>
+                <td> {{ totalSNPs|sub:pvarsbymlr }} </td>
+            </tr>
         {% endif %}
 
         {% if mcap %}
-            <li> Please click <a href={% url 'downloadvarannotation' tool='mcap'  %}>here</a> to download results by M-Cap </li>
+            <tr>
+                <td> Please click <a href={% url 'downloadvarannotation' tool='mcap'  %}>here</a> to download results by M-Cap </td>
+                <td> {{ pvarsbymcap }} </td>
+                <td> {{ totalSNPs|sub:pvarsbymcap }} </td>
+            </tr>
         {% endif %}
         {% if ls2 %}
-            <li> Please click <a href={% url 'downloadvarannotation' tool='ls2'  %}>here</a> to download results by LIST-S2 </li>
+            <tr>
+                <td> Please click <a href={% url 'downloadvarannotation' tool='ls2'  %}>here</a> to download results by LIST-S2 </td>
+                <td> {{ pvarsbyls2 }} </td>
+                <td> {{ totalSNPs|sub:pvarsbyls2 }} </td>
+            </tr>
         {% endif %}
         {% if fathmm %}
-            <li> Please click <a href={% url 'downloadvarannotation' tool='fathmm'  %}>here</a> to download results by FATHMM </li>
+            <tr>
+                <td> Please click <a href={% url 'downloadvarannotation' tool='fathmm'  %}>here</a> to download results by FATHMM </td>
+                <td> {{ pvarsbyfathmm }} </td>
+                <td> {{ totalSNPs|sub:pvarsbyfathmm }} </td>
+            </tr>
         {% endif %}
         {% if fxf %}
-            <li> Please click <a href={% url 'downloadvarannotation' tool='fxf'  %}>here</a> to download results by fathmm-XF </li>
+            <tr>
+                <td> Please click <a href={% url 'downloadvarannotation' tool='fxf'  %}>here</a> to download results by fathmm-XF </td>
+                <td> {{ pvarsbyfxf }} </td>
+                <td> {{ totalSNPs|sub:pvarsbyfxf }} </td>
+            </tr>
         {% endif %}
-        {% if fkml %}
-            <li> Please click <a href={% url 'downloadvarannotation' tool='fkml'  %}>here</a> to download results by fathmm-MKL </li>
+        {% if fmkl %}
+            <tr>
+                <td> Please click <a href={% url 'downloadvarannotation' tool='fkml'  %}>here</a> to download results by fathmm-MKL </td>
+                <td> {{ pvarsbyfmkl }} </td>
+                <td> {{ totalSNPs|sub:pvarsbyfmkl }} </td>
+            </tr>
         {% endif %}
         {% if bdeladdaf %}
-            <li> Please click <a href={% url 'downloadvarannotation' tool='bdeladdaf'  %}>here</a> to download results by BayesDel-addAF </li>
+            <tr>
+                <td> Please click <a href={% url 'downloadvarannotation' tool='bdeladdaf'  %}>here</a> to download results by BayesDel-addAF </td>
+                <td> {{ pvarsbybdeladdaf }} </td>
+                <td> {{ totalSNPs|sub:pvarsbybdeladdaf }} </td>
+            </tr>
         {% endif %}
         {% if bdelnoaf %}
-                <li> Please click <a href={% url 'downloadvarannotation' tool='bdelnoaf'  %}>here</a> to download results by BayesDel-noAF </li>
+            <tr>
+                <td> Please click <a href={% url 'downloadvarannotation' tool='bdelnoaf'  %}>here</a> to download results by BayesDel-noAF </td>
+                <td> {{ pvarsbybdelnoaf }} </td>
+                <td> {{ totalSNPs|sub:pvarsbybdelnoaf }} </td>
+            </tr>
         {% endif %}
         {% if vest4 %}
-                <li> Please click <a href={% url 'downloadvarannotation' tool='vest4'  %}>here</a> to download results by VEST4 </li>
+            <tr>
+                <td> Please click <a href={% url 'downloadvarannotation' tool='vest4'  %}>here</a> to download results by VEST4 </td>
+                <td> {{ pvarsbyvest4 }} </td>
+                <td> {{ totalSNPs|sub:pvarsbyvest4 }} </td>
+            </tr>
         {% endif %}
         {% if dann %}
-                <li> Please click <a href={% url 'downloadvarannotation' tool='dann'  %}>here</a> to download results by DANN </li>
+            <tr>
+                <td> Please click <a href={% url 'downloadvarannotation' tool='dann'  %}>here</a> to download results by DANN </td>
+                <td> {{ pvarsbydann }} </td>
+                <td> {{ totalSNPs|sub:pvarsbydann }} </td>
+            </tr>
         {% endif %}
         {% if eigen %}
-                <li> Please click <a href={% url 'downloadvarannotation' tool='eigen'  %}>here</a> to download results by Eigen </li>
+            <tr>
+                <td> Please click <a href={% url 'downloadvarannotation' tool='eigen'  %}>here</a> to download results by Eigen </td>
+                <td> {{ pvarsbyeigen }} </td>
+                <td> {{ totalSNPs|sub:pvarsbyeigen }} </td>
+            </tr>
         {% endif %}
         {% if eigenpc %}
-                <li> Please click <a href={% url 'downloadvarannotation' tool='eigenpc'  %}>here</a> to download results by Eigen-PC </li>
+            <tr>
+                <td> Please click <a href={% url 'downloadvarannotation' tool='eigenpc'  %}>here</a> to download results by Eigen-PC </td>
+                <td> {{ pvarsbyeigenpc }} </td>
+                <td> {{ totalSNPs|sub:pvarsbyeigenpc }} </td>
+            </tr>
         {% endif %}
 
         {% if deogen2 %}
-            <li> Please click <a href={% url 'downloadvarannotation' tool='deogen2'  %}>here</a> to download results by DEOGEN2 </li>
+            <tr>
+                <td> Please click <a href={% url 'downloadvarannotation' tool='deogen2'  %}>here</a> to download results by DEOGEN2 </td>
+                 <td> {{ pvarsbydoegen2 }} </td>
+                <td> {{ totalSNPs|sub:pvarsbydoegen2 }} </td>
+            </tr>
         {% endif %}
         {% if genocanyon %}
-            <li> Please click <a href={% url 'downloadvarannotation' tool='genocanyon'  %}>here</a> to download results by GenoCanyon </li>
+            <tr>
+                <td> Please click <a href={% url 'downloadvarannotation' tool='genocanyon'  %}>here</a> to download results by GenoCanyon </td>
+                <td> {{ pvarsbygenocanyon }} </td>
+                <td> {{ totalSNPs|sub:pvarsbygenocanyon }} </td>
+            </tr>
         {% endif %}
+ </tbody>
+</table>
         {% if pathogenicVarsLen > 0 %}
             <p><br></p>
              <p><b>Common pathogenic variants</b></p>
@@ -140,8 +262,8 @@
             </form>
         {% endif %}
 
-</ul>
 
-</div>
+
+
 </body>
 </html>

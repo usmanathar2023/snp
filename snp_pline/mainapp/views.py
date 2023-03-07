@@ -154,6 +154,7 @@ def vardataretrievalprocessing(request):
 
 #annotate variants using myvariantinfo restful api
 varInfoIO='';
+no_of_pathg_vars_fname=''
 def annotateVariants(request):
 
     if request.method == 'POST':
@@ -168,8 +169,17 @@ def annotateVariants(request):
     tempvarfile=varInfoIO.variantNotFoundFile[6:]
     print('varInfoIO.variantNotFoundFile===', varInfoIO.variantNotFoundFile)
     print('tempvarfile===',tempvarfile)
+    ### writing no of pathogenic and non pathogenic variants in csv
+    no_of_pathg_vars_list=no_of_pahtogenic_variants(varInfoIO)
+    print('no_of_pathg_vars_list==', no_of_pathg_vars_list)
+    fieldnames = ['Tool','Pathogenic Variants','Non Pathogenic Variants']
+    global no_of_pathg_vars_fname
+    no_of_pathg_vars_fname = 'media/' + str(uuid.uuid4()) + 'no_of_pathg_vars' + '.csv'
+    csvfw = CSVFileWriting()
+    csvfw.writeAnnotationDateCSV(no_of_pathg_vars_list, no_of_pathg_vars_fname, fieldnames)
+    ### end
+    # writing no of pathogenic and non pathogenic variants in csv
     context = {
-
         'gene': givenTerm,
         'totalSNPs': varInfoIO.totalSNPs,
         'sift':varInfoIO.isSift,
@@ -191,7 +201,7 @@ def annotateVariants(request):
         'ls2':varInfoIO.isLS2,
         'fathmm':varInfoIO.isFATHMM,
         'fxf':varInfoIO.isFXF,
-        'fkml':varInfoIO.isFMKL,
+        'fmkl':varInfoIO.isFMKL,
         'bdeladdaf':varInfoIO.isBDelAddAF,
         'bdelnoaf':varInfoIO.isBDelNoAF,
         'vest4':varInfoIO.isVest4,
@@ -200,6 +210,36 @@ def annotateVariants(request):
         'eigenpc':varInfoIO.isEigenPC,
         'deogen2':varInfoIO.isDeogen2,
         'genocanyon':varInfoIO.isGenoCanyon,
+        ## no of pathogenic variants in each tool to be shown to the user
+        'pvarsbysift':varInfoIO.siftPVars,
+        'pvarsbysift4g': varInfoIO.sift4gPVars,
+        'pvarsbyprovean': varInfoIO.proveanPVars,
+        'pvarsbymvp': varInfoIO.mvpPVars,
+        'pvarsbypolyphen2hvar': varInfoIO.polyphen2hvarPVars,
+        'pvarsbypolyphen2hdiv': varInfoIO.polyphen2hdivPVars,
+        'pvarsbyprimateai': varInfoIO.primateaiPVars,
+        'pvarsbyrevel': varInfoIO.revelPVars,
+        'pvarsbympc': varInfoIO.mpcPVars,
+        'pvarsbymutpred': varInfoIO.mutpredPVars,
+        'pvarsbymtaster': varInfoIO.mtasterPVars,
+        'pvarsbymassessor': varInfoIO.massessorPVars,
+        'pvarsbymrnn': varInfoIO.mrnnPVars,
+        'pvarsbymsvm': varInfoIO.msvmPVars,
+        'pvarsbymlr': varInfoIO.mlrPVars,
+        'pvarsbymcap': varInfoIO.mcapPVars,
+        'pvarsbyls2': varInfoIO.ls2PVars,
+        'pvarsbyfathmm': varInfoIO.fathmmPVars,
+        'pvarsbyfxf': varInfoIO.fxfPVars,
+        'pvarsbyfmkl': varInfoIO.fmklPVars,
+        'pvarsbybdeladdaf': varInfoIO.bdeladdafPVars,
+        'pvarsbybdelnoaf': varInfoIO.bdelnoafPVars,
+        'pvarsbyvest4': varInfoIO.vest4PVars,
+        'pvarsbydann': varInfoIO.dannPVars,
+        'pvarsbyeigen': varInfoIO.eigenPVars,
+        'pvarsbyeigenpc': varInfoIO.eigenpcPVars,
+        'pvarsbydoegen2': varInfoIO.doegen2PVars,
+        'pvarsbygenocanyon': varInfoIO.genocanyonPVars,
+        ## end no of pathogenic variants in each tool to be shown to the user
         'pathogenicVarsLen':len(varInfoIO.pathogenicVariants),
         'varsNotFoundLen': len(varInfoIO.varDataNotFound),
         'varNotFoundFile':tempvarfile,
@@ -380,6 +420,9 @@ def downloadVarAnnotation(request, tool):
         case 'varsnotfound':
             fDownload = FileDownload()
             return fDownload.download_file(request, '/' + varInfoIO.variantNotFoundFile)
+        case 'table':
+            fDownload = FileDownload()
+            return fDownload.download_file(request, '/' + no_of_pathg_vars_fname)
 
         case _:
             print('No tool selected')
@@ -406,5 +449,233 @@ def selVarDataRetrievalProcessing(request):
 
         return vardataretrievalprocessing(request,fName)
     #return None
-
-
+def no_of_pahtogenic_variants(varInfoIO):
+    pathogenic_vars =0;non_pathogenic_vars=0;
+    local_list=[]
+    global_list=[]
+    total_snps_int=int(varInfoIO.totalSNPs)
+    print('type===',type(varInfoIO.siftPVars))
+    if varInfoIO.isSift:
+        print('inside isSift')
+        non_pathogenic_vars=total_snps_int-varInfoIO.siftPVars
+        local_list.append('Sift')
+        local_list.append(varInfoIO.siftPVars)
+        local_list.append(non_pathogenic_vars)
+        global_list.append(local_list.copy())
+        print('local_list isSift',local_list)
+        local_list.clear()
+    if varInfoIO.isSift4G:
+        non_pathogenic_vars = total_snps_int - varInfoIO.sift4gPVars
+        local_list.append('Sift4G')
+        local_list.append(varInfoIO.sift4gPVars)
+        local_list.append(non_pathogenic_vars)
+        global_list.append(local_list.copy())
+        local_list.clear()
+    if varInfoIO.isProvean:
+        non_pathogenic_vars = total_snps_int - varInfoIO.proveanPVars
+        local_list.append('Provean')
+        local_list.append(varInfoIO.proveanPVars)
+        local_list.append(non_pathogenic_vars)
+        global_list.append(local_list.copy())
+        local_list.clear()
+    if varInfoIO.isMVP:
+        non_pathogenic_vars = total_snps_int - varInfoIO.mvpPVars
+        local_list.append('MVP')
+        local_list.append(varInfoIO.mvpPVars)
+        local_list.append(non_pathogenic_vars)
+        global_list.append(local_list.copy())
+        local_list.clear()
+    if varInfoIO.isPolyphen2HVAR:
+        pathogenic_vars=varInfoIO.polyphen2hvarPVars
+        non_pathogenic_vars = total_snps_int - pathogenic_vars
+        local_list.append('Polyphen2_HVAR')
+        local_list.append(pathogenic_vars)
+        local_list.append(non_pathogenic_vars)
+        global_list.append(local_list.copy())
+        local_list.clear()
+    if varInfoIO.isPolyphen2HDIV:
+        pathogenic_vars = varInfoIO.polyphen2hdivPVars
+        non_pathogenic_vars = total_snps_int - pathogenic_vars
+        local_list.append('Polyphen2_HDIV')
+        local_list.append(pathogenic_vars)
+        local_list.append(non_pathogenic_vars)
+        global_list.append(local_list.copy())
+        local_list.clear()
+    if varInfoIO.isPrimateAI:
+        pathogenic_vars = varInfoIO.primateaiPVars
+        non_pathogenic_vars = total_snps_int - pathogenic_vars
+        local_list.append('PrimateAI')
+        local_list.append(pathogenic_vars)
+        local_list.append(non_pathogenic_vars)
+        global_list.append(local_list.copy())
+        local_list.clear()
+    if varInfoIO.isRevel:
+        pathogenic_vars = varInfoIO.revelPVars
+        non_pathogenic_vars = total_snps_int - pathogenic_vars
+        local_list.append('REVEL')
+        local_list.append(pathogenic_vars)
+        local_list.append(non_pathogenic_vars)
+        global_list.append(local_list.copy())
+        local_list.clear()
+    if varInfoIO.isMPC:
+        pathogenic_vars = varInfoIO.mpcPVars
+        non_pathogenic_vars = total_snps_int - pathogenic_vars
+        local_list.append('MPC')
+        local_list.append(pathogenic_vars)
+        local_list.append(non_pathogenic_vars)
+        global_list.append(local_list.copy())
+        local_list.clear()
+    if varInfoIO.isMutPred:
+        pathogenic_vars = varInfoIO.mutpredPVars
+        non_pathogenic_vars = total_snps_int - pathogenic_vars
+        local_list.append('MutPred')
+        local_list.append(pathogenic_vars)
+        local_list.append(non_pathogenic_vars)
+        global_list.append(local_list.copy())
+        local_list.clear()
+    if varInfoIO.isMTaster:
+        pathogenic_vars = varInfoIO.mtasterPVars
+        non_pathogenic_vars = total_snps_int - pathogenic_vars
+        local_list.append('MutationTaster')
+        local_list.append(pathogenic_vars)
+        local_list.append(non_pathogenic_vars)
+        global_list.append(local_list.copy())
+        local_list.clear()
+    if varInfoIO.isMAssessor:
+        pathogenic_vars = varInfoIO.massessorPVars
+        non_pathogenic_vars = total_snps_int - pathogenic_vars
+        local_list.append('MutationAssessor')
+        local_list.append(pathogenic_vars)
+        local_list.append(non_pathogenic_vars)
+        global_list.append(local_list.copy())
+        local_list.clear()
+    if varInfoIO.isMRNN:
+        pathogenic_vars = varInfoIO.mrnnPVars
+        non_pathogenic_vars = total_snps_int - pathogenic_vars
+        local_list.append('MetaRNN')
+        local_list.append(pathogenic_vars)
+        local_list.append(non_pathogenic_vars)
+        global_list.append(local_list.copy())
+        local_list.clear()
+    if varInfoIO.isMSVM:
+        pathogenic_vars = varInfoIO.msvmPVars
+        non_pathogenic_vars = total_snps_int - pathogenic_vars
+        local_list.append('MetaSVM')
+        local_list.append(pathogenic_vars)
+        local_list.append(non_pathogenic_vars)
+        global_list.append(local_list.copy())
+        local_list.clear()
+    if varInfoIO.isMLR:
+        pathogenic_vars = varInfoIO.mlrPVars
+        non_pathogenic_vars = total_snps_int - pathogenic_vars
+        local_list.append('MetaLR')
+        local_list.append(pathogenic_vars)
+        local_list.append(non_pathogenic_vars)
+        global_list.append(local_list.copy())
+        local_list.clear()
+    if varInfoIO.isMCAP:
+        pathogenic_vars = varInfoIO.mcapPVars
+        non_pathogenic_vars = total_snps_int - pathogenic_vars
+        local_list.append('M-Cap')
+        local_list.append(pathogenic_vars)
+        local_list.append(non_pathogenic_vars)
+        global_list.append(local_list.copy())
+        local_list.clear()
+    if varInfoIO.isLS2:
+        pathogenic_vars = varInfoIO.ls2PVars
+        non_pathogenic_vars = total_snps_int - pathogenic_vars
+        local_list.append('LIST-S2')
+        local_list.append(pathogenic_vars)
+        local_list.append(non_pathogenic_vars)
+        global_list.append(local_list.copy())
+        local_list.clear()
+    if varInfoIO.isFATHMM:
+        pathogenic_vars = varInfoIO.fathmmPVars
+        non_pathogenic_vars = total_snps_int - pathogenic_vars
+        local_list.append('FATHMM')
+        local_list.append(pathogenic_vars)
+        local_list.append(non_pathogenic_vars)
+        global_list.append(local_list.copy())
+        local_list.clear()
+    if varInfoIO.isFXF:
+        pathogenic_vars = varInfoIO.fxfPVars
+        non_pathogenic_vars = total_snps_int - pathogenic_vars
+        local_list.append('fathmm-XF')
+        local_list.append(pathogenic_vars)
+        local_list.append(non_pathogenic_vars)
+        global_list.append(local_list.copy())
+        local_list.clear()
+    if varInfoIO.isFMKL:
+        pathogenic_vars = varInfoIO.fmklPVars
+        non_pathogenic_vars = total_snps_int - pathogenic_vars
+        local_list.append('fathmm-MKL')
+        local_list.append(pathogenic_vars)
+        local_list.append(non_pathogenic_vars)
+        global_list.append(local_list.copy())
+        local_list.clear()
+    if varInfoIO.isBDelAddAF:
+        pathogenic_vars = varInfoIO.bdeladdafPVars
+        non_pathogenic_vars = total_snps_int - pathogenic_vars
+        local_list.append('BayesDel-addAF')
+        local_list.append(pathogenic_vars)
+        local_list.append(non_pathogenic_vars)
+        global_list.append(local_list.copy())
+        local_list.clear()
+    if varInfoIO.isBDelNoAF:
+        pathogenic_vars = varInfoIO.bdelnoafPVars
+        non_pathogenic_vars = total_snps_int - pathogenic_vars
+        local_list.append('BayesDel-noAF')
+        local_list.append(pathogenic_vars)
+        local_list.append(non_pathogenic_vars)
+        global_list.append(local_list.copy())
+        local_list.clear()
+    if varInfoIO.isVest4:
+        pathogenic_vars = varInfoIO.vest4PVars
+        non_pathogenic_vars = total_snps_int - pathogenic_vars
+        local_list.append('VEST4')
+        local_list.append(pathogenic_vars)
+        local_list.append(non_pathogenic_vars)
+        global_list.append(local_list.copy())
+        local_list.clear()
+    if varInfoIO.isDANN:
+        pathogenic_vars = varInfoIO.dannPVars
+        non_pathogenic_vars = total_snps_int - pathogenic_vars
+        local_list.append('DANN')
+        local_list.append(pathogenic_vars)
+        local_list.append(non_pathogenic_vars)
+        global_list.append(local_list.copy())
+        local_list.clear()
+    if varInfoIO.isEigen:
+        pathogenic_vars = varInfoIO.eigenPVars
+        non_pathogenic_vars = total_snps_int - pathogenic_vars
+        local_list.append('Eigen')
+        local_list.append(pathogenic_vars)
+        local_list.append(non_pathogenic_vars)
+        global_list.append(local_list.copy())
+        local_list.clear()
+    if varInfoIO.isEigenPC:
+        pathogenic_vars = varInfoIO.eigenpcPVars
+        non_pathogenic_vars = total_snps_int - pathogenic_vars
+        local_list.append('Eigen-PC')
+        local_list.append(pathogenic_vars)
+        local_list.append(non_pathogenic_vars)
+        global_list.append(local_list.copy())
+        local_list.clear()
+    if varInfoIO.isDeogen2:
+        pathogenic_vars = varInfoIO.doegen2PVars
+        non_pathogenic_vars = total_snps_int - pathogenic_vars
+        local_list.append('DEOGEN2')
+        local_list.append(pathogenic_vars)
+        local_list.append(non_pathogenic_vars)
+        global_list.append(local_list.copy())
+        local_list.clear()
+    if varInfoIO.isGenoCanyon:
+        pathogenic_vars = varInfoIO.genocanyonPVars
+        non_pathogenic_vars = total_snps_int - pathogenic_vars
+        local_list.append('GenoCanyon')
+        local_list.append(pathogenic_vars)
+        local_list.append(non_pathogenic_vars)
+        global_list.append(local_list.copy())
+        local_list.clear()
+    print('global_list== ',global_list)
+    return global_list

@@ -21,16 +21,19 @@ class VarintInfoIO:
     isGenoCanyon=False; pathogenicVarFile='';variantNotFoundFile='';
     siftFile = '';  sift4gFile = ''; proveanFile = ''; mvpFile = '';polyphen2hvarFile = '';polyphen2hdivFile=''; primateaiFile = ''; revelFile = ''; mpcFile = '';
     mutpredFile = ''; mtasterFile = ''; massessorFile = ''; mrnnFile = ''; msvmFile = ''; mlrFile = ''; mcapFile = ''; ls2File = ''; fathmmFile = '';
-    fxfFile = ''; fmklFile = ''; bdeladdafFile = ''; bdelnoafFile = ''; vest4File = ''; dannFile = ''; eigenFile = ''; eigenpcFile = '';  doegen2File = '';
-    genocanyonFile = '';
-    totalSNPs='';
+    fxfFile = ''; fmklFile = ''; bdeladdafFile = ''; bdelnoafFile = ''; vest4File = ''; dannFile = ''; eigenFile = ''; eigenpcFile = '';  doegen2File = ''; genocanyonFile = '';
+    siftPVars=0;sift4gPVars=0;proveanPVars=0;mvpPVars=0;polyphen2hvarPVars=0;polyphen2hdivPVars=0;primateaiPVars=0; revelPVars=0;mpcPVars=0;
+    mutpredPVars = 0;mtasterPVars=0;massessorPVars=0;mrnnPVars=0;msvmPVars=0;mlrPVars=0;mcapPVars=0;ls2PVars=0;fathmmPVars=0;
+    fxfPVars = 0;fmklPVars=0;bdeladdafPVars=0;bdelnoafPVars=0;vest4PVars=0;dannPVars=0;eigenPVars=0;eigenpcPVars=0;doegen2PVars=0;genocanyonPVars=0;
+
+    totalSNPs=0;
     def parseMyVarinats(self, request,fabricatedTerm):
         self.pathogenicVariants.clear()
         mv = myvariant.MyVariantInfo();
         self.chekboxValues.clear()
         mvVar = ''
         Entrez.email = "usman.athar@gmail.com"
-        handle = Entrez.esearch(db="snp", term=fabricatedTerm, retmax=10)
+        handle = Entrez.esearch(db="snp", term=fabricatedTerm, retmax=5)
         variantData = Entrez.read(handle)
         self.totalSNPs = variantData['Count']
         varids = variantData["IdList"]
@@ -47,7 +50,10 @@ class VarintInfoIO:
         self.mutpredFile = ''; self.mtasterFile = ''; self.massessorFile = ''; self.mrnnFile = ''; self.msvmFile = ''; self.mlrFile = ''; self.mcapFile = ''; self.ls2File = '';
         self.fathmmFile = ''; self.fxfFile = ''; self.fmklFile = ''; self.bdeladdafFile = ''; self.bdelnoafFile = ''; self.vest4File = ''; self.dannFile = ''; self.eigenFile = '';
         self.eigenpcFile = '';  self.doegen2File = '';  self.genocanyonFile = ''; self.pathogenicVarFile='';self.variantNotFoundFile='';
-
+        self.siftPVars = 0; self.sift4gPVars = 0;  self.proveanPVars = 0; self.mvpPVars = 0; self.polyphen2hvarPVars = 0; self.polyphen2hdivPVars = 0; self.primateaiPVars = 0;  self.revelPVars = 0;
+        self.mpcPVars = 0;  self.mutpredPVars = 0;  self.mtasterPVars = 0; self.massessorPVars = 0; self.mrnnPVars = 0; self.msvmPVars = 0; self.mlrPVars = 0; self.mcapPVars = 0; self.ls2PVars = 0;
+        self.fathmmPVars = 0; self.fxfPVars = 0; self.fmklPVars = 0; self.bdeladdafPVars = 0; self.bdelnoafPVars = 0; self.vest4PVars = 0; self.dannPVars = 0; self.eigenPVars = 0; self.eigenpcPVars = 0;
+        self.doegen2PVars = 0;self.genocanyonPVars=0;
         loopCount = 0;
         print('chekboxValues=== ', self.chekboxValues)
         fabricatedFields = []; listOfTuplesSift = []; annotationDataRowSift = []; finalAnnotationDataSift = [];  annotationDataRowSift4g = [];
@@ -667,6 +673,7 @@ class VarintInfoIO:
                 self.isPathogenicBySelectedTools = 1
             else:
                 annotationDataRowSift.insert(2, 'Damaging')
+                self.siftPVars+=1
                 if self.isPathogenicBySelectedTools != 1:
                     self.isPathogenicBySelectedTools=  2
         if x[0] == 'converted_rankscore':
@@ -686,6 +693,7 @@ class VarintInfoIO:
                 self.isPathogenicBySelectedTools = 1
             else:
                 annotationDataRowSift4g.insert(2, 'Damaging')
+                self.sift4gPVars+=1
                 if self.isPathogenicBySelectedTools != 1:
                     self.isPathogenicBySelectedTools = 2
         if x[0] == 'converted_rankscore':
@@ -705,6 +713,7 @@ class VarintInfoIO:
                 self.isPathogenicBySelectedTools = 1
             else:
                 annotationDataRowProvean.insert(2, 'Damaging')
+                self.proveanPVars+=1
                 if self.isPathogenicBySelectedTools != 1:
                     self.isPathogenicBySelectedTools = 2
         if x[0] == 'converted_rankscore':
@@ -737,6 +746,7 @@ class VarintInfoIO:
                 self.isPathogenicBySelectedTools = 1
             else:
                 annotationDataRowMVP.insert(2, 'Damaging')
+                self.mvpPVars+=1
                 if self.isPathogenicBySelectedTools != 1:
                     self.isPathogenicBySelectedTools = 2
         if len(annotationDataRowMVP) == 3:
@@ -752,6 +762,7 @@ class VarintInfoIO:
                 self.isPathogenicBySelectedTools = 1
             else:
                 annotationDataRowPolyphen2hvar.insert(2, 'Damaging')
+                self.polyphen2hvarPVars+=1
                 if self.isPathogenicBySelectedTools != 1:
                     self.isPathogenicBySelectedTools = 2
         if x[0] == 'rankscore':
@@ -771,6 +782,7 @@ class VarintInfoIO:
                 self.isPathogenicBySelectedTools = 1
             else:
                 annotationDataRowPolyphen2hdiv.insert(2, 'Damaging')
+                self.polyphen2hdivPVars+=1
                 if self.isPathogenicBySelectedTools != 1:
                     self.isPathogenicBySelectedTools = 2
         if x[0] == 'rankscore':
@@ -790,6 +802,7 @@ class VarintInfoIO:
                 self.isPathogenicBySelectedTools = 1
             else:
                 annotationDataRowPrimateai.insert(2, 'Damaging')
+                self.primateaiPVars+=1
                 if self.isPathogenicBySelectedTools != 1:
                     self.isPathogenicBySelectedTools = 2
         if x[0] == 'rankscore':
@@ -816,6 +829,7 @@ class VarintInfoIO:
                 self.isPathogenicBySelectedTools = 1
             else:
                 annotationDataRowRevel.insert(2, 'Damaging')
+                self.revelPVars+=1
                 if self.isPathogenicBySelectedTools != 1:
                     self.isPathogenicBySelectedTools = 2
         if len(annotationDataRowRevel) == 3:
@@ -838,6 +852,7 @@ class VarintInfoIO:
                 self.isPathogenicBySelectedTools = 1
             else:
                 annotationDataRowMPC.insert(2, 'Damaging')
+                self.mpcPVars+=1
                 if self.isPathogenicBySelectedTools != 1:
                     self.isPathogenicBySelectedTools = 2
         if len(annotationDataRowMPC) == 3:
@@ -860,6 +875,7 @@ class VarintInfoIO:
                 self.isPathogenicBySelectedTools = 1
             else:
                 annotationDataRowMutpred.insert(2, 'Damaging')
+                self.mutpredPVars+=1
                 if self.isPathogenicBySelectedTools != 1:
                     self.isPathogenicBySelectedTools = 2
         if len(annotationDataRowMutpred) == 3:
@@ -875,6 +891,7 @@ class VarintInfoIO:
                 self.isPathogenicBySelectedTools = 1
             else:
                 annotationDataRowMtaster.insert(2, 'Damaging')
+                self.mtasterPVars+=1
                 if self.isPathogenicBySelectedTools != 1:
                     self.isPathogenicBySelectedTools = 2
         if x[0] == 'converted_rankscore':
@@ -894,6 +911,7 @@ class VarintInfoIO:
                 self.isPathogenicBySelectedTools = 1
             else:
                 annotationDataRowMassessor.insert(2, 'Damaging')
+                self.massessorPVars+=1
                 if self.isPathogenicBySelectedTools != 1:
                     self.isPathogenicBySelectedTools = 2
         if x[0] == 'rankscore':
@@ -913,6 +931,7 @@ class VarintInfoIO:
                 self.isPathogenicBySelectedTools = 1
             else:
                 annotationDatRowMRNN.insert(2, 'Damaging')
+                self.mrnnPVars+=1
                 if self.isPathogenicBySelectedTools != 1:
                     self.isPathogenicBySelectedTools = 2
         if x[0] == 'rankscore':
@@ -932,6 +951,7 @@ class VarintInfoIO:
                 self.isPathogenicBySelectedTools = 1
             else:
                 annotationDatRowMSVM.insert(2, 'Damaging')
+                self.msvmPVars+=1
                 if self.isPathogenicBySelectedTools != 1:
                     self.isPathogenicBySelectedTools = 2
         if x[0] == 'rankscore':
@@ -950,6 +970,7 @@ class VarintInfoIO:
                 self.isPathogenicBySelectedTools = 1
             else:
                 annotationDatRowMLR.insert(2, 'Damaging')
+                self.mlrPVars+=1
                 if self.isPathogenicBySelectedTools != 1:
                     self.isPathogenicBySelectedTools = 2
         if x[0] == 'rankscore':
@@ -969,6 +990,7 @@ class VarintInfoIO:
                 self.isPathogenicBySelectedTools = 1
             else:
                 annotationDatRowMCAP.insert(2, 'Damaging')
+                self.mcapPVars+=1
                 if self.isPathogenicBySelectedTools != 1:
                     self.isPathogenicBySelectedTools = 2
         if x[0] == 'rankscore':
@@ -987,6 +1009,7 @@ class VarintInfoIO:
                 self.isPathogenicBySelectedTools = 1
             else:
                 annotationDatRowLS2.insert(2, 'Damaging')
+                self.ls2PVars+=1
                 if self.isPathogenicBySelectedTools != 1:
                     self.isPathogenicBySelectedTools = 2
         if x[0] == 'rankscore':
@@ -1005,6 +1028,7 @@ class VarintInfoIO:
                 self.isPathogenicBySelectedTools = 1
             else:
                 annotationDatRowFathmm.insert(2, 'Damaging')
+                self.fathmmPVars+=1
                 if self.isPathogenicBySelectedTools != 1:
                     self.isPathogenicBySelectedTools = 2
         if x[0] == 'converted_rankscore':
@@ -1023,6 +1047,7 @@ class VarintInfoIO:
                 self.isPathogenicBySelectedTools = 1
             else:
                 annotationDatRowFXF.insert(2, 'Damaging')
+                self.fxfPVars+=1
                 if self.isPathogenicBySelectedTools != 1:
                     self.isPathogenicBySelectedTools = 2
         if x[0] == 'coding_rankscore':
@@ -1041,6 +1066,7 @@ class VarintInfoIO:
                 self.isPathogenicBySelectedTools = 1
             else:
                 annotationDatRowFMKL.insert(2, 'Damaging')
+                self.fmklPVars+=1
                 if self.isPathogenicBySelectedTools != 1:
                     self.isPathogenicBySelectedTools = 2
         if x[0] == 'coding_rankscore':
@@ -1060,6 +1086,7 @@ class VarintInfoIO:
                     self.isPathogenicBySelectedTools = 1
                 else:
                     annotationDataRowBdeladdf.insert(2, 'Damaging')
+                    self.bdeladdafPVars+=1
                     if self.isPathogenicBySelectedTools != 1:
                         self.isPathogenicBySelectedTools = 2
             if x[0] == 'rankscore':
@@ -1079,6 +1106,7 @@ class VarintInfoIO:
                     self.isPathogenicBySelectedTools = 1
                 else:
                     annotationDataRowBdelnoaf.insert(2, 'Damaging')
+                    self.bdelnoafPVars+=1
                     if self.isPathogenicBySelectedTools != 1:
                         self.isPathogenicBySelectedTools = 2
             if x[0] == 'rankscore':
@@ -1104,6 +1132,7 @@ class VarintInfoIO:
                 self.isPathogenicBySelectedTools = 1
             else:
                 annotationDataRowVest4.insert(2, 'Damaging')
+                self.vest4PVars+=1
                 if self.isPathogenicBySelectedTools != 1:
                     self.isPathogenicBySelectedTools = 2
         if len(annotationDataRowVest4) == 3:
@@ -1125,6 +1154,7 @@ class VarintInfoIO:
                 self.isPathogenicBySelectedTools = 1
             else:
                 annotationDataRowDann.insert(2, 'Damaging')
+                self.dannPVars+=1
                 if self.isPathogenicBySelectedTools != 1:
                     self.isPathogenicBySelectedTools = 2
         if len(annotationDataRowDann) == 3:
@@ -1145,6 +1175,7 @@ class VarintInfoIO:
                 self.isPathogenicBySelectedTools = 1
             else:
                 annotationDataRowEigen.insert(3, 'Damaging')
+                self.eigenPVars+=1
                 if self.isPathogenicBySelectedTools != 1:
                     self.isPathogenicBySelectedTools = 2
         if x[0] == 'raw_coding':
@@ -1169,6 +1200,7 @@ class VarintInfoIO:
                 self.isPathogenicBySelectedTools = 1
             else:
                 annotationDataRowEigenpc.insert(3, 'Damaging')
+                self.eigenpcPVars+=1
                 if self.isPathogenicBySelectedTools != 1:
                     self.isPathogenicBySelectedTools = 2
         if x[0] == 'raw_coding':
@@ -1188,6 +1220,7 @@ class VarintInfoIO:
                 self.isPathogenicBySelectedTools = 1
             else:
                 annotationDataRowDoegen2.insert(2, 'Damaging')
+                self.doegen2PVars+=1
                 if self.isPathogenicBySelectedTools != 1:
                     self.isPathogenicBySelectedTools = 2
         if x[0] == 'rankscore':
@@ -1214,6 +1247,7 @@ class VarintInfoIO:
                 self.isPathogenicBySelectedTools = 1
             else:
                 annotationDataRowGenocanyon.insert(2, 'Damaging')
+                self.genocanyonPVars+=1
                 if self.isPathogenicBySelectedTools != 1:
                     self.isPathogenicBySelectedTools = 2
         if len(annotationDataRowGenocanyon) == 3:

@@ -1,0 +1,26 @@
+table {
+  max-width:100%;
+white-space:nowrap;
+
+
+}
+
+th, td {
+  width: 25%;
+  text-align: left;
+  vertical-align: top;
+
+  border-collapse: collapse;
+  padding: 0.3em;
+  caption-side: bottom;
+}
+
+caption {
+  font-family: "Rock Salt", cursive;
+  padding: 20px;
+  font-style: italic;
+  caption-side: bottom;
+  color: #666;
+  text-align: right;
+  letter-spacing: 1px;
+}
