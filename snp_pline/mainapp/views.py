@@ -46,7 +46,7 @@ def vardataretrievalprocessing(request):
             givenTerm = request.POST.get('genId')
             fabricatedTerm = givenTerm + ' AND missense variant[Function_Class]'
             Entrez.email = "usman.athar@gmail.com"
-            handle = Entrez.esearch(db="snp", term=fabricatedTerm, retmax=10000)
+            handle = Entrez.esearch(db="snp", term=fabricatedTerm, retmax=100)
             variantData = Entrez.read(handle)
             totalSNPs = variantData['Count']
             varids = variantData["IdList"]
@@ -73,7 +73,7 @@ def vardataretrievalprocessing(request):
         rsIds = []
         grch37vardatainstance = Grch37VariantData()
         grch38vardatainstance = grch38variantdata.Grch38VariantData()
-        excelrw = ExcelRW()
+
         csvfw=CSVFileWriting()
         prot_var_data = ProteinVariantData()
         refseqid_to_uniprotid = RefSeqId_to_UniProtId()
