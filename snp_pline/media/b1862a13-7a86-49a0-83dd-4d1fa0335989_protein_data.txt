@@ -1,0 +1,12 @@
+Gene Name: 
+cyp11b2
+UniProt ID:
+
+UniProt Name:
+ 
+Protein Data: 
+
+RefSeq_Protein Id: 
+NP_000489.3
+Protein Allelic Data:
+T234P

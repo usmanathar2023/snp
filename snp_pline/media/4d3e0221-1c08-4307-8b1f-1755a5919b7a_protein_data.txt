@@ -1,0 +1,13 @@
+Gene Name: 
+CAPN10
+UniProt ID:
+
+UniProt Name:
+ 
+Protein Data: 
+
+RefSeq_Protein Id: 
+NP_075571.2
+Protein Allelic Data:
+E611K
+E456K
