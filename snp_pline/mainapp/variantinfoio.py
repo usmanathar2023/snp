@@ -33,7 +33,7 @@ class VarintInfoIO:
         self.chekboxValues.clear()
         mvVar = ''
         Entrez.email = "usman.athar@gmail.com"
-        handle = Entrez.esearch(db="snp", term=fabricatedTerm, retmax=100)
+        handle = Entrez.esearch(db="snp", term=fabricatedTerm, retmax=5)
         variantData = Entrez.read(handle)
         self.totalSNPs = variantData['Count']
         varids = variantData["IdList"]

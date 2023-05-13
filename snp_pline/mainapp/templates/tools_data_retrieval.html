@@ -26,11 +26,10 @@ function uncheckAll() {
     });
        </script>
 
-    <section style="background: rgba(245,126,32,255);height: 450px;">
-        <div class="container text-center" style="background: rgba(245,126,32,255);color: rgb(255,255,255);width: 1000px;height: 50px;border-style: none;"></div>
+
         <form method="post" action="/vardataretrieval/vardataretrievalprocessing"  enctype="multipart/form-data"   id="varDataRetForm" name="snpprocessingform" target="_blank">
             {% csrf_token %}
-        <div class="container text-center border rounded-pill border-danger" style="background: rgba(214,42,40,255);color: rgb(255,255,255);width: 1000px;height: 365px;border-style: none;">
+        <div  style="background: white;width: 100%;height: 50%;border-style: none;text-align: center">
             <br>
              <h2 class="mb-5">Choose the option</h2>
             <input type="hidden" name="varNotFoundTxt", id="varNotFoundTxt" value={{varNotFoundFile}}/>
@@ -49,10 +48,9 @@ function uncheckAll() {
                 <div class="col"><input type="checkbox" id="protdataoption" name="chekboxValues" value="protdata"><label class="form-label">Protein data</label></div>
             </div>
 
-            <div class="row" style="height: 20px;"></div><button class="btn btn-outline-light btn-lg" type="submit" style="background: rgba(245,126,32,255);font-family: Montserrat, sans-serif;border-style: none;">Continue</button>&nbsp;&nbsp;&nbsp;<button class="btn btn-outline-light btn-lg" type="button" style="background: rgba(245,126,32,255);border-style: none;" onClick="uncheckAll()">&nbsp; &nbsp;Reset&nbsp; &nbsp;</button>
+            <div class="row" style="height: 20px;"></div><button class="btn btn-outline-light btn-lg" type="submit" style="background: dimgrey;font-family: Montserrat, sans-serif;border-style: none;">Continue</button>&nbsp;&nbsp;&nbsp;<button class="btn btn-outline-light btn-lg" type="button" style="background: dimgrey;border-style: none;" onClick="uncheckAll()">&nbsp; &nbsp;Reset&nbsp; &nbsp;</button>
         </div>
         </form>
-        <div class="container text-center" style="background: rgba(245,126,32,255);color: rgb(255,255,255);width: 1000px;height: 50px;border-style: none;"></div>
-    </section>
+
 
 {% endblock %}
