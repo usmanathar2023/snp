@@ -46,7 +46,7 @@ def vardataretrievalprocessing(request):
             givenTerm = request.POST.get('genId')
             fabricatedTerm = givenTerm + ' AND missense variant[Function_Class]'
             Entrez.email = "usman.athar@gmail.com"
-            handle = Entrez.esearch(db="snp", term=fabricatedTerm, retmax=100)
+            handle = Entrez.esearch(db="snp", term=fabricatedTerm, retmax=5)
             variantData = Entrez.read(handle)
             totalSNPs = variantData['Count']
             varids = variantData["IdList"]
