@@ -1,9 +1,0 @@
-https://myvariant.info/v1/variant/rs4537
-
-http://annoq.org:3403/annoq-test/_search?q=rs_dbSNP151:%22rs4537%22
-
-vannoportal
-
-http://www.mulinlab.org/vportal/apir.html?q=rs4537&g=hg19
-http://www.mulinlab.org/vportal/portal/api?q=rs4537&g=hg19&p=eur&f=all
-http://www.mulinlab.org/vportal/documentaiton.html

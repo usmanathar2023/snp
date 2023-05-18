@@ -1,2 +1,0 @@
-retmax example for getting large ids from dbSNP
-https://www.ncbi.nlm.nih.gov/books/NBK25499/

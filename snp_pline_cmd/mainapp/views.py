@@ -1,18 +1,18 @@
 
-from django.shortcuts import render
+
 from Bio import Entrez
 import requests, sys, json
-from . import grch38variantdata
-from .grch37variantdata import Grch37VariantData
-from .dbsnpvarientdataretrieval import DBSnpVarientDataRetrieval
-from.filewriting import FileWriting
-from .filedownloading import FileDownload
-from .excelrw import ExcelRW
-from .csvwriting import CSVFileWriting
-from .proteinvariantdata import ProteinVariantData
-from .refseqid_to_uniprotid import RefSeqId_to_UniProtId
-#from .variantinfoio import VarintInfoIO
-from mainapp import variantinfoio
+import grch38variantdata
+from grch37variantdata import Grch37VariantData
+from dbsnpvarientdataretrieval import DBSnpVarientDataRetrieval
+from filewriting import FileWriting
+from filedownloading import FileDownload
+from excelrw import ExcelRW
+from csvwriting import CSVFileWriting
+from proteinvariantdata import ProteinVariantData
+from refseqid_to_uniprotid import RefSeqId_to_UniProtId
+#from variantinfoio import VarintInfoIO
+import variantinfoio
 import uuid
 import myvariant
 import numpy as np
@@ -189,13 +189,15 @@ def annotateVariants():
     no_of_pathg_vars_fname = 'media/' + str(uuid.uuid4()) + '_no_of_pathg_vars' + '.csv'
     csvfw = CSVFileWriting()
     csvfw.writeAnnotationDateCSV(no_of_pathg_vars_list, no_of_pathg_vars_fname, fieldnames)
-    optionForVarNotFound=input('Please see '+"''"+ varInfoIO.variantNotFoundFile +"''"+ 'file to see variants not found by MyVariant Info. \n Would you like '
+    optionForVarNotFound=''
+    if varInfoIO.variantNotFoundFile!='':
+        optionForVarNotFound=input('Please see '+"''"+ varInfoIO.variantNotFoundFile +"''"+ 'file to see variants not found by MyVariant Info. \n Would you like '
     'to get chromosome coordinates and proteomic data of these variants? press Y for Yes and n for No')
     match optionForVarNotFound:
         case 'y' | 'Y':
             vardataretrievalprocessing()
         case _:
-            quit()
+           quit()
     ### end
     # writing no of pathogenic and non pathogenic variants in csv
 

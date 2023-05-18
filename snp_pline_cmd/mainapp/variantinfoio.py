@@ -1,14 +1,14 @@
 from Bio import Entrez
 import myvariant
 import re
-from .dictionaryIO import DictionaryIO
+from dictionaryIO import DictionaryIO
 import uuid
-from .csvwriting import CSVFileWriting
+from csvwriting import CSVFileWriting
 import requests, sys, json
-from .dbsnpvarientdataretrieval import DBSnpVarientDataRetrieval
+from dbsnpvarientdataretrieval import DBSnpVarientDataRetrieval
 
 from biothings_client import get_client
-from .grch37variantdata import Grch37VariantData
+from grch37variantdata import Grch37VariantData
 class VarintInfoIO:
     dataNotFound=[]
     toolAnnonotationNotFound={}
