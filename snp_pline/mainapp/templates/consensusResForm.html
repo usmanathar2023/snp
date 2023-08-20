@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<script type="text/javascript">
+ function changeCheckBoxState(src){
+    var checkboxes = document.getElementsByName('chekboxValues');
+    for (var checkbox of checkboxes) {
+        checkbox.checked = src.checked;
+    }
+}
+//create uncheckall function
+    function uncheckAll() {
+     /*
+        var inputs = document.getElementsByName('chekboxValues');
+        for (var i = 0; i < inputs.length; i++) {
+            inputs[i].checked = false;
+        }*/
+        document.getElementById("varAnnotationForm").reset();
+
+
+    }
+    </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $("form").submit(function(){
+             if ($('input:checkbox').filter(':checked').length < 1){
+                    alert("Please Check at least one Check Box");
+             return false;
+             }
+        });
+    });
+       </script>
+     <form method="post" action="consensusresultsform/consensusresults" enctype="multipart/form-data"   id="varAnnotationForm" name="varAnnotationForm" target="_blank">
+            {% csrf_token %}
+        <div  style="background: white;width: 100%;height: 50%;border-style: none;text-align: center">
+            <br>
+            <b><p style="color:  rgba(214,42,40,255)"> Get IPSNP Consensus Results</p> </b>
+           <br>
+            <div class="row">
+                <div class="col" ><label class="form-label">Gen ID:&nbsp;</label><input class="border rounded" type="text" name="genId" style="width: 350px;" required></div>
+            </div>
+
+
+            <div class="row" style="height: 20px;"></div><button class="btn btn-outline-light btn-lg" type="submit" style="background: dimgrey;font-family: Montserrat, sans-serif;border-style: none;">Continue</button>&nbsp;&nbsp;&nbsp;<button class="btn btn-outline-light btn-lg" type="button" style="background: dimgrey;border-style: none;" onClick="uncheckAll()">&nbsp; &nbsp;Reset&nbsp; &nbsp;</button>
+            <br>
+        </div>
+        </form>
+
+
+
+{% endblock %}

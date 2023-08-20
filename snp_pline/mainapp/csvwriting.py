@@ -21,7 +21,7 @@ class CSVFileWriting:
             writer.writerows(chr_coord_list)
 
     def writeAnnotationDateCSV(self, AnnoData, fname,fieldnames):
-        #print('fname', fname)
+        print('fname', fname)
         with open(fname, 'w', encoding='utf-8',newline='') as f:
             writer = csv.writer(f)
             writer.writerow(fieldnames)

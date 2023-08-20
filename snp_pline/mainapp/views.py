@@ -12,6 +12,7 @@ from .csvwriting import CSVFileWriting
 from .proteinvariantdata import ProteinVariantData
 from .refseqid_to_uniprotid import RefSeqId_to_UniProtId
 from .variantinfoio import VarintInfoIO
+from .consensusresulscompute import ConsensusResultsCompute
 import uuid
 import myvariant
 import numpy as np
@@ -30,6 +31,8 @@ def runTools(request):
     return render(request, 'runtools.html')
 def varDataRetrieval(request):
     return render(request, 'vardataretrieval.html')
+def consensusResultsForm(request):
+    return render(request, 'toolsFormForConsensusRes.html')
 results =''
 def vardataretrievalprocessing(request):
     grch37B = False;
@@ -78,8 +81,17 @@ def vardataretrievalprocessing(request):
         prot_var_data = ProteinVariantData()
         refseqid_to_uniprotid = RefSeqId_to_UniProtId()
         count=0; protData=''
+
+        #varids=[]
+        #varids.append('2122689595')
+        #varids.append('2122689168')
+        #varids.append('2122688815')
+        #varids.append('2122668164')
+        #varids.append('2122660256')
+
+
         for varid in varids:
-            print('varid==', varid)
+            #print('varid==', varid)
             dbsnpvardata_str = dbsnpvardata.getvariantdata(varid)
             #print('dbsnpvardata_str==', dbsnpvardata_str)
             if chekboxValues.__contains__('grch37'):  #writing GRCh37 chromosome coordinates
@@ -87,7 +99,9 @@ def vardataretrievalprocessing(request):
             if chekboxValues.__contains__('grch38'): # writing GRCh38 chromosome coordinates in csv format
                 grch38vardatainstance.parsevardatabystring(dbsnpvardata_str, varid)
             if chekboxValues.__contains__('protdata'):
-                prot_var_data.parsevardatabystring(dbsnpvardata_str)
+                #print("dbsnpvardata_str==",dbsnpvardata_str)
+                prot_var_data.parsevardatabystring(dbsnpvardata_str,varid)
+               # print("dbsnpvardata_str==", dbsnpvardata_str)
                 if count==0:
                     protData=refseqid_to_uniprotid.get_uniprotid_from_refseqid(givenTerm,prot_var_data.prot_var_data_dict['refSeqProtId'])
 
@@ -247,8 +261,32 @@ def annotateVariants(request):
 
     }
     return render(request, 'varAnnotationDownloand.html', context)
+consResCompute='';
+def consensusResults(request):
+
+    if request.method == 'POST':
+        givenTerm = request.POST.get('genId')
+        fabricatedTerm = givenTerm + ' AND missense variant[Function_Class]'
+        global consResCompute
+        consResCompute=ConsensusResultsCompute()
+        consResCompute.parseMyVarinats(request,fabricatedTerm)
+        selectedTools=consResCompute.chekboxValues
+        print('selectedTools inside views== ',selectedTools)
+
+    tempvarfile=consResCompute.variantNotFoundFile[6:]
+    print('varInfoIO.variantNotFoundFile===', consResCompute.variantNotFoundFile)
+
+    ### writing no of pathogenic and non pathogenic variants in csv
+
+    ### end
+    # writing no of pathogenic and non pathogenic variants in csv
+    context = {
+        'gene': givenTerm,
+        'totalSNPs': consResCompute.totalSNPs,
 
 
+    }
+    return render(request, 'toolsConsensusResForm.html', context)
 def entrezIdSummaryInfo(givenId):
     print("givenId : ",givenId)
     Entrez.email = "usman.athar@gmail.com"
@@ -323,6 +361,9 @@ def downloadGRCh38File(request):
 def downloadProteinDataFile(request):
     fDownload=FileDownload()
     return fDownload.download_file(request, '/'+  prot_var_data_filename)
+def downloadConsensusResFile(request):
+    fDownload=FileDownload()
+    return fDownload.download_file(request, '/'+  consResCompute.resultsFile)
 
 def downloadVarAnnotation(request, tool):
     global varInfoIO
