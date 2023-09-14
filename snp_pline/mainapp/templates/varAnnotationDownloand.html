@@ -236,6 +236,20 @@
                 <td> {{ totalSNPs|sub:pvarsbygenocanyon }} </td>
             </tr>
         {% endif %}
+        {% if cadd %}
+            <tr>
+                <td> Please click <a href={% url 'downloadvarannotation' tool='cadd'  %}>here</a> to download results by cadd </td>
+                <td> {{ pvarsbycadd }} </td>
+                <td> {{ totalSNPs|sub:pvarsbycadd }} </td>
+            </tr>
+        {% endif %}
+        {% if snpeff %}
+            <tr>
+                <td> Please click <a href={% url 'downloadvarannotation' tool='snpeff'  %}>here</a> to download results by SnpEff </td>
+                <td> {{ pvarsbysnpeff }} </td>
+                <td> {{ totalSNPs|sub:pvarsbysnpeff }} </td>
+            </tr>
+        {% endif %}
  </tbody>
 </table>
         {% if pathogenicVarsLen > 0 %}

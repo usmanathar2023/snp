@@ -12,48 +12,65 @@ class VarintInfoIO:
     dataNotFound=[]
     toolAnnonotationNotFound={}
     varDataNotFound=[]
+    caddDataNotFound = []
+    snpeffDataNotFound = []
     isPathogenicBySelectedTools=0 #this variable is for computing a variant as pathogenic by all selected tools i.e. finding common pathogenic
     pathogenicVariants=[]
     chekboxValues=[]
     isSift = False; isSift4G=False; isProvean=False; isMVP=False; isPolyphen2HVAR=False; isPolyphen2HDIV=False; isPrimateAI=False; isRevel=False;
     isMPC=False; isMutPred=False; isMTaster=False; isMAssessor=False; isMRNN=False; isMSVM=False; isMLR=False; isMCAP=False; isLS2=False; isFATHMM=False;
     isFXF=False; isFMKL=False; isBDelAddAF=False; isBDelNoAF=False; isVest4=False; isDANN=False; isEigen=False; isEigenPC=False; isDeogen2=False;
-    isGenoCanyon=False; pathogenicVarFile='';variantNotFoundFile='';
+    isGenoCanyon=False; pathogenicVarFile='';variantNotFoundFile=''; isCadd = False; isSnpeff = False;
     siftFile = '';  sift4gFile = ''; proveanFile = ''; mvpFile = '';polyphen2hvarFile = '';polyphen2hdivFile=''; primateaiFile = ''; revelFile = ''; mpcFile = '';
     mutpredFile = ''; mtasterFile = ''; massessorFile = ''; mrnnFile = ''; msvmFile = ''; mlrFile = ''; mcapFile = ''; ls2File = ''; fathmmFile = '';
     fxfFile = ''; fmklFile = ''; bdeladdafFile = ''; bdelnoafFile = ''; vest4File = ''; dannFile = ''; eigenFile = ''; eigenpcFile = '';  doegen2File = ''; genocanyonFile = '';
+    caddFile = ''; snpeffFile = '';
     siftPVars=0;sift4gPVars=0;proveanPVars=0;mvpPVars=0;polyphen2hvarPVars=0;polyphen2hdivPVars=0;primateaiPVars=0; revelPVars=0;mpcPVars=0;
     mutpredPVars = 0;mtasterPVars=0;massessorPVars=0;mrnnPVars=0;msvmPVars=0;mlrPVars=0;mcapPVars=0;ls2PVars=0;fathmmPVars=0;
     fxfPVars = 0;fmklPVars=0;bdeladdafPVars=0;bdelnoafPVars=0;vest4PVars=0;dannPVars=0;eigenPVars=0;eigenpcPVars=0;doegen2PVars=0;genocanyonPVars=0;
+    caddPVars = 0; snpeffPVars = 0;
 
     totalSNPs=0;
-    def parseMyVarinats(self, request,fabricatedTerm):
+    def parseMyVarinats(self, request,fabricatedTerm,rsids):
         self.pathogenicVariants.clear()
         mv = myvariant.MyVariantInfo();
         self.chekboxValues.clear()
+        print('rsids==',rsids)
+        varids=[]
         mvVar = ''
-        Entrez.email = "usman.athar@gmail.com"
-        handle = Entrez.esearch(db="snp", term=fabricatedTerm, retmax=5)
-        variantData = Entrez.read(handle)
-        self.totalSNPs = variantData['Count']
-        varids = variantData["IdList"]
+        if len(rsids) > 0: #and rsids != NULL:
+            rsids=rsids.split(",")
+            for rsid in rsids:
+                varids.append(rsid.removeprefix("rs"))
+
+        else:
+            Entrez.email = "usman.athar@gmail.com"
+            handle = Entrez.esearch(db="snp", term=fabricatedTerm, retmax=5)
+            variantData = Entrez.read(handle)
+            self.totalSNPs = variantData['Count']
+            varids = variantData["IdList"]
+        print('varids==', varids)
+
+
+        print('varids==', varids)
         dictIO = DictionaryIO()
         csvfw = CSVFileWriting();
         self.isSift = False; self.isSift4G = False; self.isProvean = False; self.isMVP = False; self.isPolyphen2HVAR = False; self.isPolyphen2HDIV = False;
         self.isPrimateAI = False; self.isRevel = False; self.isMPC = False; self.isMutPred = False; self.isMTaster = False; self.isMAssessor = False;
         self.isMRNN = False; self.isMSVM = False; self.isMLR = False; self.isMCAP = False; self.isLS2 = False; self.isFATHMM = False; self.isFXF = False;
         self.isFMKL = False; self.isBDelAddAF = False; self.isBDelNoAF = False; self.isVest4 = False; self.isDANN = False; self.isEigen = False; self.isEigenPC = False;
-        self.isDeogen2 = False;  self.isGenoCanyon = False;
+        self.isDeogen2 = False;  self.isGenoCanyon = False;self.isCadd = False;self.isSnpeff = False;
         self.chekboxValues = str(request.POST.getlist('chekboxValues', ''))
 
         self.siftFile = ''; self.sift4gFile = ''; self.proveanFile = ''; self.mvpFile = ''; self.polyphen2hvarFile = ''; self.polyphen2hdivFile='';self.primateaiFile = ''; self.revelFile = ''; self.mpcFile = '';
         self.mutpredFile = ''; self.mtasterFile = ''; self.massessorFile = ''; self.mrnnFile = ''; self.msvmFile = ''; self.mlrFile = ''; self.mcapFile = ''; self.ls2File = '';
         self.fathmmFile = ''; self.fxfFile = ''; self.fmklFile = ''; self.bdeladdafFile = ''; self.bdelnoafFile = ''; self.vest4File = ''; self.dannFile = ''; self.eigenFile = '';
-        self.eigenpcFile = '';  self.doegen2File = '';  self.genocanyonFile = ''; self.pathogenicVarFile='';self.variantNotFoundFile='';
+        self.eigenpcFile = '';  self.doegen2File = '';  self.genocanyonFile = ''; self.caddFile='';self.snpeffFile='';self.pathogenicVarFile='';self.variantNotFoundFile='';
+
         self.siftPVars = 0; self.sift4gPVars = 0;  self.proveanPVars = 0; self.mvpPVars = 0; self.polyphen2hvarPVars = 0; self.polyphen2hdivPVars = 0; self.primateaiPVars = 0;  self.revelPVars = 0;
         self.mpcPVars = 0;  self.mutpredPVars = 0;  self.mtasterPVars = 0; self.massessorPVars = 0; self.mrnnPVars = 0; self.msvmPVars = 0; self.mlrPVars = 0; self.mcapPVars = 0; self.ls2PVars = 0;
         self.fathmmPVars = 0; self.fxfPVars = 0; self.fmklPVars = 0; self.bdeladdafPVars = 0; self.bdelnoafPVars = 0; self.vest4PVars = 0; self.dannPVars = 0; self.eigenPVars = 0; self.eigenpcPVars = 0;
-        self.doegen2PVars = 0;self.genocanyonPVars=0;
+        self.doegen2PVars = 0;self.genocanyonPVars=0; self.caddPVars=0;self.snpeffPVars=0;
         loopCount = 0;
         print('chekboxValues=== ', self.chekboxValues)
         fabricatedFields = []; listOfTuplesSift = []; annotationDataRowSift = []; finalAnnotationDataSift = [];  annotationDataRowSift4g = [];
@@ -67,12 +84,17 @@ class VarintInfoIO:
         finalAnnotationDataFXF = [];  annotationDataRowFMKL = []; finalAnnotationDataFMKL = [];  annotationDataRowBdeladdaf = []; finalAnnotationDataBdeladdaf = [];
         annotationDataRowBdelnoaf = []; finalAnnotationDataBdelnoaf = []; annotationDataRowVest4 = []; finalAnnotationDataVest4 = []; annotationDataRowDann = [];
         finalAnnotationDataDann = [];  annotationDataRowEigen = []; finalAnnotationDataEigen = [];  annotationDataRowEigenpc = []; finalAnnotationDataEigenpc = [];
-        annotationDataRowDoegen2 = [];  finalAnnotationDataDoegen2 = [];  annotationDataRowGenocanyon = [];  finalAnnotationDataGenocanyon = []
-        fabricatedFields.clear(); self.toolAnnonotationNotFound.clear(); self.varDataNotFound.clear();
+        annotationDataRowDoegen2 = [];  finalAnnotationDataDoegen2 = [];  annotationDataRowGenocanyon = [];  finalAnnotationDataGenocanyon = []; annotationDataRowCadd = [];  finalAnnotationDataCadd = [];
+        annotationDataRowSnpeff = []; finalAnnotationDataSnpeff = [];
+        fabricatedFields.clear(); self.toolAnnonotationNotFound.clear(); self.varDataNotFound.clear(); self.caddDataNotFound.clear(); self.snpeffDataNotFound.clear()
+        self.printmyname()
         hgvs37Ids=self.getHGVS37Ids(varids)
         #print("hgvs37Ids",hgvs37Ids)
         varDataNotFound_local=[]
         pathogenicVariants_local=[]
+        caddDataNotFound_local = []
+        snpeffDataNotFound_local = []
+        dbnsfpVarDic={}
         for vars in hgvs37Ids: #varids: for (a, b, c) in itertools.zip_longest(num, color, value, fillvalue=-1):
             id = vars[0]
             hgvs37Id = vars[1] #'rs' + str(varid)
@@ -80,6 +102,9 @@ class VarintInfoIO:
             varDataNotFound_local.clear()
             pathogenicVariants_local.clear()
             #id='rs104894072'
+            caddSourceFound = 0;
+            dbnsfpSourceFound = 0;
+            snpeffSourceFound = 0;
             try:
                 r = requests.get('http://myvariant.info/v1/variant/'+hgvs37Id)  # , headers={"Content-Type": "application/json"})
             except:
@@ -87,8 +112,10 @@ class VarintInfoIO:
             #print('r.status_code= ', r.status_code)
             if r.status_code==200:
                 varDic = r.json()
+                print('varDic=== ',varDic)
                 if isinstance(varDic, list):
                     varDicStr=str(varDic)
+                    '''
                     index1=varDicStr.find('dbnsfp')
                     if index1 < 0:
                         varDataNotFound_local.append(id)
@@ -109,6 +136,78 @@ class VarintInfoIO:
                         self.varDataNotFound.append(varDataNotFound_local.copy())
                         continue
                     dbnsfpVarDic = varDic.get('dbnsfp')
+                    '''
+                    index1 = varDicStr.find('cadd')
+
+                    if index1 < 0:
+                        caddDataNotFound_local.append(id)
+                        caddDataNotFound_local.append(hgvs37Id)
+                        self.caddDataNotFound.append(caddDataNotFound_local.copy())
+                        caddSourceFound=0
+                    else:
+
+                        caddStr=varDicStr[index1:]
+                        index2 = caddStr.index('dbnsfp')
+                        #print('index2= ', index2)
+                        caddStr=caddStr[:index2-3]
+                        caddSourceFound = 1
+                    #varDic=eval(varDicStr)
+                   # extracting dbnsfp dictionary
+                    index1=varDicStr.find('dbnsfp')
+                    if index1 < 0:
+                        varDataNotFound_local.append(id)
+                        varDataNotFound_local.append(hgvs37Id)
+                        self.varDataNotFound.append(varDataNotFound_local.copy())
+                        dbnsfpSourceFound=0
+                    else:
+                        varDicStr=varDicStr[index1+9:]
+                        index2 = varDicStr.index('dbsnp')
+                        #print('index2= ', index2)
+                        varDicStr=varDicStr[:index2-3]
+                        varDic=eval(varDicStr)
+                        dbnsfpVarDic = varDic
+                        dbnsfpSourceFound = 1
+                    # extracting snpeff string
+                    index1 = varDicStr.find('snpeff')
+                    if index1 < 0:
+                        snpeffDataNotFound_local.append(id)
+                        snpeffDataNotFound_local.append(hgvs37Id)
+                        self.snpeffDataNotFound.append(snpeffDataNotFound_local.copy())
+                        snpeffSourceFound = 0
+                    else:
+                        varDicStr = varDicStr[index1 + 10:]
+                        index2 = varDicStr.index('vcf-1')
+                        # print('index2= ', index2)
+                        snpeffStr = varDicStr[:index2 - 3]
+                        snpeffSourceFound = 1
+                else:
+                    if varDic.get('cadd') == None:
+                        caddDataNotFound_local.append(id)
+                        caddDataNotFound_local.append(hgvs37Id)
+                        self.caddDataNotFound.append(caddDataNotFound_local.copy())
+                        caddSourceFound = 0
+                    else:
+                        caddStr= str(varDic.get('cadd'))
+                        caddSourceFound = 1
+                        print('caddStr= ', caddStr)
+                    if varDic.get('dbnsfp') == None:
+                        varDataNotFound_local.append(id)
+                        varDataNotFound_local.append(hgvs37Id)
+                        self.varDataNotFound.append(varDataNotFound_local.copy())
+                        dbnsfpSourceFound = 0
+                    else:
+                        dbnsfpVarDic = varDic.get('dbnsfp')
+                        dbnsfpSourceFound = 1
+                    if varDic.get('snpeff') == None:
+                        snpeffDataNotFound_local.append(id)
+                        snpeffDataNotFound_local.append(hgvs37Id)
+                        self.snpeffDataNotFound.append(snpeffDataNotFound_local.copy())
+                        snpeffSourceFound = 0
+                    else:
+                        snpeffStr = str(varDic.get('snpeff'))
+                        snpeffSourceFound = 1 #
+                if caddSourceFound==0 and dbnsfpSourceFound==0 and snpeffSourceFound==0:
+                    continue
                 #print('varDic= ', type(varDic))
                 #print('varDic= ', varDic)
                 #print('r.status_code= ', r.status_code)
@@ -448,6 +547,75 @@ class VarintInfoIO:
 
                 else:
                     self.toolAnnonotationNotFound['genocanyon' + str(loopCount)] = id
+                if self.chekboxValues.__contains__('cadd') and caddStr.find('http://bit.ly/2TIuab9') > 0:
+
+                    index1 = caddStr.find('phred')
+
+                    if index1 < 0:
+                        caddScoreNotFound=0
+                    else:
+                        caddPhredStr = caddStr[index1 + 7:]
+                        print('caddPhredStr: ', caddPhredStr)
+                        index2 = caddPhredStr.find(',')
+                        # print('index2= ', index2)
+                        caddPgredScore = caddPhredStr[:index2]
+                        caddPgredScore = caddPgredScore.strip()
+                        print('caddPgredScore: ', caddPgredScore)
+                        caddPgredScoreFloat=float(caddPgredScore)
+                        caddPgredScoreInt=round(caddPgredScoreFloat)
+                        if caddPgredScoreInt < 20:
+                            annotationDataRowCadd.insert(3, 'Tolerant')
+                            self.isPathogenicBySelectedTools = 1
+                        else:
+                            annotationDataRowCadd.insert(3, 'Damaging')
+                            self.caddPVars += 1
+
+                        if self.isPathogenicBySelectedTools != 1:
+                            self.isPathogenicBySelectedTools = 2
+                        annotationDataRowCadd.insert(2, caddPgredScore)
+                        annotationDataRowCadd.insert(0, id)
+                        annotationDataRowCadd.insert(1, hgvs37Id)
+                        finalAnnotationDataCadd.append(annotationDataRowCadd.copy())
+                        annotationDataRowCadd.clear()
+
+                    if loopCount == 0:
+                        self.caddFile = 'media/' + str(uuid.uuid4()) + '_cadd' + '.csv'
+
+                        #print('caddPgredScoreInt: ', caddPgredScoreInt)
+
+                else:
+                    self.toolAnnonotationNotFound['cadd' + str(loopCount)] = id
+                if self.chekboxValues.__contains__('snpeff') and snpeffStr.find('http://bit.ly/2suyRKt')> 0:
+                    index1 = snpeffStr.find('putative_impact')
+
+                    if index1 < 0:
+                        snpeeScoreNotFound = 0
+                    else:
+                        snpeffpredictionstr = snpeffStr[index1 + 19:]
+                        #print('snpeffpredictionstr: ', snpeffpredictionstr)
+                        index2 = snpeffpredictionstr.find(',')
+                        # print('index2= ', index2)
+                        snpeffpredition = snpeffpredictionstr[:index2-1]
+                        snpeffpredition=snpeffpredition.strip()
+                        if snpeffpredition!='HIGH':
+
+                            annotationDataRowSnpeff.insert(2, snpeffpredition +' impact')
+                            self.isPathogenicBySelectedTools = 1
+                        else:
+                            annotationDataRowSnpeff.insert(2, snpeffpredition +' impact')
+                            self.snpeffPVars += 1
+                            if self.isPathogenicBySelectedTools != 1:
+                                self.isPathogenicBySelectedTools = 2
+
+                        annotationDataRowSnpeff.insert(0, id)
+                        annotationDataRowSnpeff.insert(1, hgvs37Id)
+                        finalAnnotationDataSnpeff.append(annotationDataRowSnpeff.copy())
+                        annotationDataRowSnpeff.clear()
+                        #print('snpeffpredition: ', snpeffpredition)
+                    if loopCount == 0:
+                        self.snpeffFile = 'media/' + str(uuid.uuid4()) + '_snpeff' + '.csv'
+                else:
+                    self.toolAnnonotationNotFound['snpeff' + str(loopCount)] = id
                 loopCount +=1
             else:
                 varDataNotFound_local.append(id)
@@ -461,6 +629,7 @@ class VarintInfoIO:
         ###ends outmost for loop
         if len(finalAnnotationDataSift) > 0:
             fieldnames = ['rsid','HGVSId', 'Converted Rankscore', 'Score', 'Prediction']
+            print('self.siftFile  ',self.siftFile)
             csvfw.writeAnnotationDateCSV(finalAnnotationDataSift, self.siftFile,fieldnames)
             self.isSift = True
         else:
@@ -468,6 +637,7 @@ class VarintInfoIO:
 
         if len(finalAnnotationDataSift4g) > 0:
             fieldnames = ['rsid','HGVSId', 'Converted Rankscore', 'Score', 'Prediction']
+            print('self.sift4gFile  ', self.sift4gFile)
             csvfw.writeAnnotationDateCSV(finalAnnotationDataSift4g, self.sift4gFile,fieldnames)
             self.isSift4G=True
         else:
@@ -475,6 +645,7 @@ class VarintInfoIO:
 
         if len(finalAnnotationDataProvean) > 0:
             fieldnames = ['rsid','HGVSId', 'Score', 'Prediction']
+            print('self.proveanFile  ', self.proveanFile)
             csvfw.writeAnnotationDateCSV(finalAnnotationDataProvean, self.proveanFile, fieldnames)
             self.isProvean=True
         else:
@@ -655,6 +826,19 @@ class VarintInfoIO:
             self.isEigenPC=True
         else:
             self.dataNotFound.append('eigenpc')
+        if len(finalAnnotationDataCadd) > 0:
+            fieldnames = ['rsid','HGVSId','Score', 'Prediction' ]
+            csvfw.writeAnnotationDateCSV(finalAnnotationDataCadd, self.caddFile, fieldnames)
+            self.isCadd=True
+        else:
+            self.dataNotFound.append('cadd')
+        if len(finalAnnotationDataSnpeff) > 0:
+            fieldnames = ['rsid','HGVSId', 'Prediction' ]
+            csvfw.writeAnnotationDateCSV(finalAnnotationDataSnpeff, self.snpeffFile, fieldnames)
+            self.isSnpeff=True
+        else:
+            self.dataNotFound.append('snpeff')
+
         if len(self.pathogenicVariants)>0:
             fieldnames = ['rsid', 'HGVSId']
             self.pathogenicVarFile = 'media/' + str(uuid.uuid4()) + '_pathogenic_variants' + '.csv'
@@ -665,17 +849,31 @@ class VarintInfoIO:
             self.variantNotFoundFile = 'media/' + str(uuid.uuid4()) + '_variantnotfound' + '.csv'
             csvfw.writeAnnotationDateCSV(self.varDataNotFound, self.variantNotFoundFile, fieldnames)
     ###ends startParsing method
-
+    def printmyname(self):
+        print("tt")
+    def getHGVS37Ids(self, varids):
+        dbsnpvardata = DBSnpVarientDataRetrieval()
+        grch37vardatainstance = Grch37VariantData()
+        for varid in varids:
+           dbsnpvardata_str = dbsnpvardata.getvariantdata(varid)
+           grch37vardatainstance.parsevardatabystring(dbsnpvardata_str, varid)
+        hgvs37Ids=grch37vardatainstance.hgvs37Ids
+        return hgvs37Ids
     def annotateBySift(self, x, annotationDataRowSift,finalAnnotationDataSift,id,hgvs37Id):
+        x2 = ''
         if x[0] == 'pred':
-            if x[1] == 'T':
+            if isinstance(x[1], list):
+                x2 = list(x[1])
+            if x[1] == 'T' or x2.__contains__('T'):
+
                 annotationDataRowSift.insert(2, 'Tolerant')
-                self.isPathogenicBySelectedTools = 1
+
             else:
                 annotationDataRowSift.insert(2, 'Damaging')
-                self.siftPVars+=1
+                self.siftPVars += 1
                 if self.isPathogenicBySelectedTools != 1:
-                    self.isPathogenicBySelectedTools=  2
+                    self.isPathogenicBySelectedTools = 2
+
         if x[0] == 'converted_rankscore':
             annotationDataRowSift.insert(0, x[1])
         if x[0] == 'score':
@@ -685,17 +883,20 @@ class VarintInfoIO:
             annotationDataRowSift.insert(1, hgvs37Id)
             finalAnnotationDataSift.append(annotationDataRowSift.copy())
             annotationDataRowSift.clear()
-
     def annotateBySift4g(self, x,annotationDataRowSift4g,finalAnnotationDataSift4g, id,hgvs37Id):
+        x2 = ''
         if x[0] == 'pred':
-            if x[1] == 'T':
+            if isinstance(x[1], list):
+                x2 = list(x[1])
+            if x[1] == 'T' or x2.__contains__('T'):
                 annotationDataRowSift4g.insert(2, 'Tolerant')
-                self.isPathogenicBySelectedTools = 1
+
             else:
                 annotationDataRowSift4g.insert(2, 'Damaging')
-                self.sift4gPVars+=1
+                self.sift4gPVars += 1
                 if self.isPathogenicBySelectedTools != 1:
                     self.isPathogenicBySelectedTools = 2
+
         if x[0] == 'converted_rankscore':
             annotationDataRowSift4g.insert(0, x[1])
         if x[0] == 'score':
@@ -707,15 +908,20 @@ class VarintInfoIO:
             annotationDataRowSift4g.clear()
 
     def annotateByProvean(self, x, annotationDataRowProvean, finalAnnotationDataProvean, id,hgvs37Id):
+        x2 = ''
         if x[0] == 'pred':
-            if x[1] == 'N':
+            print('provean x1', x[1])
+            if isinstance(x[1], list):
+                x2 = list(x[1])
+            if x[1] == 'N' or x2.__contains__('N'):
                 annotationDataRowProvean.insert(2, 'Tolerant')
-                self.isPathogenicBySelectedTools = 1
+
             else:
                 annotationDataRowProvean.insert(2, 'Damaging')
-                self.proveanPVars+=1
+                self.proveanPVars += 1
                 if self.isPathogenicBySelectedTools != 1:
                     self.isPathogenicBySelectedTools = 2
+
         if x[0] == 'converted_rankscore':
             annotationDataRowProvean.insert(0, x[1])
         if x[0] == 'score':
@@ -756,15 +962,19 @@ class VarintInfoIO:
             annotationDataRowMVP.clear()
     #Polyphen2hdiv
     def annotateByPolyphen2hvar(self, x, annotationDataRowPolyphen2hvar, finalAnnotationDataPolyphen2hvar, id,hgvs37Id):
+        x2 = ''
         if x[0] == 'pred':
-            if x[1] == 'B':
+            if isinstance(x[1], list):
+                x2 = list(x[1])
+            if x[1] == 'B' or x2.__contains__('B'):
                 annotationDataRowPolyphen2hvar.insert(2, 'Tolerant')
-                self.isPathogenicBySelectedTools = 1
+
             else:
                 annotationDataRowPolyphen2hvar.insert(2, 'Damaging')
-                self.polyphen2hvarPVars+=1
+                self.polyphen2hvarPVars += 1
                 if self.isPathogenicBySelectedTools != 1:
                     self.isPathogenicBySelectedTools = 2
+
         if x[0] == 'rankscore':
             annotationDataRowPolyphen2hvar.insert(0, x[1])
         if x[0] == 'score':
@@ -776,15 +986,19 @@ class VarintInfoIO:
             annotationDataRowPolyphen2hvar.clear()
 
     def annotateByPolyphen2hdiv(self, x, annotationDataRowPolyphen2hdiv, finalAnnotationDataPolyphen2hdiv, id,hgvs37Id):
+        x2 = ''
         if x[0] == 'pred':
-            if x[1] == 'B':
+            if isinstance(x[1], list):
+                x2 = list(x[1])
+            if x[1] == 'B' or x2.__contains__('B'):
                 annotationDataRowPolyphen2hdiv.insert(2, 'Tolerant')
-                self.isPathogenicBySelectedTools = 1
+
             else:
                 annotationDataRowPolyphen2hdiv.insert(2, 'Damaging')
-                self.polyphen2hdivPVars+=1
+                self.polyphen2hdivPVars += 1
                 if self.isPathogenicBySelectedTools != 1:
                     self.isPathogenicBySelectedTools = 2
+
         if x[0] == 'rankscore':
             annotationDataRowPolyphen2hdiv.insert(0, x[1])
         if x[0] == 'score':
@@ -794,17 +1008,20 @@ class VarintInfoIO:
             annotationDataRowPolyphen2hdiv.insert(1, hgvs37Id)
             finalAnnotationDataPolyphen2hdiv.append(annotationDataRowPolyphen2hdiv.copy())
             annotationDataRowPolyphen2hdiv.clear()
-
     def annotateByPrimateai(self, x, annotationDataRowPrimateai, finalAnnotationDataPrimateai, id,hgvs37Id):
+        x2 = ''
         if x[0] == 'pred':
-            if x[1] == 'T':
+            if isinstance(x[1], list):
+                x2 = list(x[1])
+            if x[1] == 'T' or x2.__contains__('T'):
                 annotationDataRowPrimateai.insert(2, 'Tolerant')
-                self.isPathogenicBySelectedTools = 1
+
             else:
                 annotationDataRowPrimateai.insert(2, 'Damaging')
-                self.primateaiPVars+=1
+                self.primateaiPVars += 1
                 if self.isPathogenicBySelectedTools != 1:
                     self.isPathogenicBySelectedTools = 2
+
         if x[0] == 'rankscore':
             annotationDataRowPrimateai.insert(0, x[1])
         if x[0] == 'score':
@@ -814,7 +1031,7 @@ class VarintInfoIO:
             annotationDataRowPrimateai.insert(1, hgvs37Id)
             finalAnnotationDataPrimateai.append(annotationDataRowPrimateai.copy())
             annotationDataRowPrimateai.clear()
-#annotationDataRowRevel
+    #annotationDataRowRevel
     def annotateByRevel(self, x, annotationDataRowRevel, finalAnnotationDataRevel, id,hgvs37Id):
         if x[0] == 'rankscore':
             annotationDataRowRevel.insert(0, x[1])
@@ -885,15 +1102,20 @@ class VarintInfoIO:
             annotationDataRowMutpred.clear()
 
     def annotateByMtaster(self, x, annotationDataRowMtaster, finalAnnotationDataMtaster, id,hgvs37Id):
+        x2 = ''
         if x[0] == 'pred':
-            if x[1] == 'N':
+            print('mtaster x1', x[1])
+            if isinstance(x[1], list):
+                x2 = list(x[1])
+            if x[1] == 'N' or x2.__contains__('N'):
                 annotationDataRowMtaster.insert(2, 'Tolerant')
-                self.isPathogenicBySelectedTools = 1
+
             else:
                 annotationDataRowMtaster.insert(2, 'Damaging')
-                self.mtasterPVars+=1
+                self.mvpPVars += 1
                 if self.isPathogenicBySelectedTools != 1:
                     self.isPathogenicBySelectedTools = 2
+
         if x[0] == 'converted_rankscore':
             annotationDataRowMtaster.insert(0, x[1])
         if x[0] == 'score':
@@ -905,15 +1127,20 @@ class VarintInfoIO:
             annotationDataRowMtaster.clear()  # annotationDataRowMtaster
 
     def annotateByMassessor(self, x, annotationDataRowMassessor, finalAnnotationDataMassessor, id,hgvs37Id):
+        x2 = ''
         if x[0] == 'pred':
-            if x[1] == 'N':
+            print('massessor x1', x[1])
+            if isinstance(x[1], list):
+                x2 = list(x[1])
+            if x[1] == 'T' or x2.__contains__('T'):
                 annotationDataRowMassessor.insert(2, 'Tolerant')
-                self.isPathogenicBySelectedTools = 1
+
             else:
                 annotationDataRowMassessor.insert(2, 'Damaging')
-                self.massessorPVars+=1
+                self.massessorPVars += 1
                 if self.isPathogenicBySelectedTools != 1:
                     self.isPathogenicBySelectedTools = 2
+
         if x[0] == 'rankscore':
             annotationDataRowMassessor.insert(0, x[1])
         if x[0] == 'score':
@@ -925,13 +1152,16 @@ class VarintInfoIO:
             annotationDataRowMassessor.clear()
 
     def annotateByMRNN(self, x, annotationDatRowMRNN, finalAnnotationDataMRNN, id,hgvs37Id):
+        x2 = ''
         if x[0] == 'pred':
-            if x[1] == 'T':
+            if isinstance(x[1], list):
+                x2 = list(x[1])
+            if x[1] == 'T' or x2.__contains__('T'):
                 annotationDatRowMRNN.insert(2, 'Tolerant')
-                self.isPathogenicBySelectedTools = 1
+
             else:
                 annotationDatRowMRNN.insert(2, 'Damaging')
-                self.mrnnPVars+=1
+                self.mrnnPVars += 1
                 if self.isPathogenicBySelectedTools != 1:
                     self.isPathogenicBySelectedTools = 2
         if x[0] == 'rankscore':
@@ -945,13 +1175,16 @@ class VarintInfoIO:
             annotationDatRowMRNN.clear()
 
     def annotateByMSVM(self, x, annotationDatRowMSVM, finalAnnotationDataMSVM, id,hgvs37Id):
+        x2 = ''
         if x[0] == 'pred':
-            if x[1] == 'T':
+            if isinstance(x[1], list):
+                x2 = list(x[1])
+            if x[1] == 'T' or x2.__contains__('T'):
                 annotationDatRowMSVM.insert(2, 'Tolerant')
-                self.isPathogenicBySelectedTools = 1
+
             else:
                 annotationDatRowMSVM.insert(2, 'Damaging')
-                self.msvmPVars+=1
+                self.msvmPVars += 1
                 if self.isPathogenicBySelectedTools != 1:
                     self.isPathogenicBySelectedTools = 2
         if x[0] == 'rankscore':
@@ -962,15 +1195,18 @@ class VarintInfoIO:
             annotationDatRowMSVM.insert(0, id)
             annotationDatRowMSVM.insert(1, hgvs37Id)
             finalAnnotationDataMSVM.append(annotationDatRowMSVM.copy())
-            annotationDatRowMSVM.clear() #annotationDataRowMLR
+            annotationDatRowMSVM.clear()  # annotationDataRowMLR
     def annotateByMLR(self, x, annotationDatRowMLR, finalAnnotationDataMLR, id,hgvs37Id):
+        x2 = ''
         if x[0] == 'pred':
-            if x[1] == 'T':
+            if isinstance(x[1], list):
+                x2 = list(x[1])
+            if x[1] == 'T' or x2.__contains__('T'):
                 annotationDatRowMLR.insert(2, 'Tolerant')
-                self.isPathogenicBySelectedTools = 1
+
             else:
                 annotationDatRowMLR.insert(2, 'Damaging')
-                self.mlrPVars+=1
+                self.mlrPVars += 1
                 if self.isPathogenicBySelectedTools != 1:
                     self.isPathogenicBySelectedTools = 2
         if x[0] == 'rankscore':
@@ -984,13 +1220,16 @@ class VarintInfoIO:
             annotationDatRowMLR.clear()
 
     def annotateByMCAP(self, x, annotationDatRowMCAP, finalAnnotationDataMCAP, id,hgvs37Id):
+        x2 = ''
         if x[0] == 'pred':
-            if x[1] == 'T':
+            if isinstance(x[1], list):
+                x2 = list(x[1])
+            if x[1] == 'T' or x2.__contains__('T'):
                 annotationDatRowMCAP.insert(2, 'Tolerant')
-                self.isPathogenicBySelectedTools = 1
+
             else:
                 annotationDatRowMCAP.insert(2, 'Damaging')
-                self.mcapPVars+=1
+                self.mcapPVars += 1
                 if self.isPathogenicBySelectedTools != 1:
                     self.isPathogenicBySelectedTools = 2
         if x[0] == 'rankscore':
@@ -1002,14 +1241,18 @@ class VarintInfoIO:
             annotationDatRowMCAP.insert(1, hgvs37Id)
             finalAnnotationDataMCAP.append(annotationDatRowMCAP.copy())
             annotationDatRowMCAP.clear()
+
     def annotateByLS2(self, x, annotationDatRowLS2, finalAnnotationDataLS2, id,hgvs37Id):
+        x2 = ''
         if x[0] == 'pred':
-            if x[1] == 'T':
+            if isinstance(x[1], list):
+                x2 = list(x[1])
+            if x[1] == 'T' or x2.__contains__('T'):
                 annotationDatRowLS2.insert(2, 'Tolerant')
-                self.isPathogenicBySelectedTools = 1
+
             else:
                 annotationDatRowLS2.insert(2, 'Damaging')
-                self.ls2PVars+=1
+                self.ls2PVars += 1
                 if self.isPathogenicBySelectedTools != 1:
                     self.isPathogenicBySelectedTools = 2
         if x[0] == 'rankscore':
@@ -1021,14 +1264,19 @@ class VarintInfoIO:
             annotationDatRowLS2.insert(1, hgvs37Id)
             finalAnnotationDataLS2.append(annotationDatRowLS2.copy())
             annotationDatRowLS2.clear()
+
     def annotateByFathmm(self, x, annotationDatRowFathmm, finalAnnotationDataFathmm, id,hgvs37Id):
+        x2 = ''
         if x[0] == 'pred':
-            if x[1] == 'T':
+            print('fathmm x1', x[1])
+            if isinstance(x[1], list):
+                x2 = list(x[1])
+            if x[1] == 'T' or x2.__contains__('T'):
                 annotationDatRowFathmm.insert(2, 'Tolerant')
-                self.isPathogenicBySelectedTools = 1
+
             else:
                 annotationDatRowFathmm.insert(2, 'Damaging')
-                self.fathmmPVars+=1
+                self.fathmmPVars += 1
                 if self.isPathogenicBySelectedTools != 1:
                     self.isPathogenicBySelectedTools = 2
         if x[0] == 'converted_rankscore':
@@ -1040,14 +1288,18 @@ class VarintInfoIO:
             annotationDatRowFathmm.insert(1, hgvs37Id)
             finalAnnotationDataFathmm.append(annotationDatRowFathmm.copy())
             annotationDatRowFathmm.clear()
+
     def annotateByFXF(self, x, annotationDatRowFXF, finalAnnotationDataFXF, id,hgvs37Id):
+        x2 = ''
         if x[0] == 'coding_pred':
-            if x[1] == 'N':
+            if isinstance(x[1], list):
+                x2 = list(x[1])
+            if x[1] == 'T' or x2.__contains__('T'):
                 annotationDatRowFXF.insert(2, 'Tolerant')
-                self.isPathogenicBySelectedTools = 1
+
             else:
                 annotationDatRowFXF.insert(2, 'Damaging')
-                self.fxfPVars+=1
+                self.fxfPVars += 1
                 if self.isPathogenicBySelectedTools != 1:
                     self.isPathogenicBySelectedTools = 2
         if x[0] == 'coding_rankscore':
@@ -1059,14 +1311,18 @@ class VarintInfoIO:
             annotationDatRowFXF.insert(1, hgvs37Id)
             finalAnnotationDataFXF.append(annotationDatRowFXF.copy())
             annotationDatRowFXF.clear()
+
     def annotateByFMKL(self, x, annotationDatRowFMKL, finalAnnotationDataFMKL, id,hgvs37Id):
+        x2 = ''
         if x[0] == 'coding_pred':
-            if x[1] == 'N':
+            if isinstance(x[1], list):
+                x2 = list(x[1])
+            if x[1] == 'T' or x2.__contains__('T'):
                 annotationDatRowFMKL.insert(2, 'Tolerant')
-                self.isPathogenicBySelectedTools = 1
+
             else:
                 annotationDatRowFMKL.insert(2, 'Damaging')
-                self.fmklPVars+=1
+                self.fmklPVars += 1
                 if self.isPathogenicBySelectedTools != 1:
                     self.isPathogenicBySelectedTools = 2
         if x[0] == 'coding_rankscore':
@@ -1078,46 +1334,55 @@ class VarintInfoIO:
             annotationDatRowFMKL.insert(1, hgvs37Id)
             finalAnnotationDataFMKL.append(annotationDatRowFMKL.copy())
             annotationDatRowFMKL.clear()
+
     def annotateByBdeladdaf(self, x, annotationDataRowBdeladdf, finalAnnotationDataBdeladdf, id,hgvs37Id):
         #if x[0] == 'add_af':
-            if x[0] == 'pred':
-                if x[1] == 'T':
-                    annotationDataRowBdeladdf.insert(2, 'Tolerant')
-                    self.isPathogenicBySelectedTools = 1
-                else:
-                    annotationDataRowBdeladdf.insert(2, 'Damaging')
-                    self.bdeladdafPVars+=1
-                    if self.isPathogenicBySelectedTools != 1:
-                        self.isPathogenicBySelectedTools = 2
-            if x[0] == 'rankscore':
-                annotationDataRowBdeladdf.insert(0, x[1])
-            if x[0] == 'score':
-                annotationDataRowBdeladdf.insert(1, x[1])
-            if len(annotationDataRowBdeladdf) == 3:
-                annotationDataRowBdeladdf.insert(0, id)
-                annotationDataRowBdeladdf.insert(1, hgvs37Id)
-                finalAnnotationDataBdeladdf.append(annotationDataRowBdeladdf.copy())
-                annotationDataRowBdeladdf.clear()
+        x2 = ''
+        if x[0] == 'pred':
+            if isinstance(x[1], list):
+                x2 = list(x[1])
+            if x[1] == 'T' or x2.__contains__('T'):
+                annotationDataRowBdeladdf.insert(2, 'Tolerant')
+
+            else:
+                annotationDataRowBdeladdf.insert(2, 'Damaging')
+                self.bdeladdafPVars += 1
+                if self.isPathogenicBySelectedTools != 1:
+                    self.isPathogenicBySelectedTools = 2
+        if x[0] == 'rankscore':
+            annotationDataRowBdeladdf.insert(0, x[1])
+        if x[0] == 'score':
+            annotationDataRowBdeladdf.insert(1, x[1])
+        if len(annotationDataRowBdeladdf) == 3:
+            annotationDataRowBdeladdf.insert(0, id)
+            annotationDataRowBdeladdf.insert(1, hgvs37Id)
+            finalAnnotationDataBdeladdf.append(annotationDataRowBdeladdf.copy())
+            annotationDataRowBdeladdf.clear()
+
     def annotateByBdelnoaf(self, x, annotationDataRowBdelnoaf, finalAnnotationDataBdelnoaf, id,hgvs37Id):
         #if x[0] == 'no_af':
-            if x[0] == 'pred':
-                if x[1] == 'T':
-                    annotationDataRowBdelnoaf.insert(2, 'Tolerant')
-                    self.isPathogenicBySelectedTools = 1
-                else:
-                    annotationDataRowBdelnoaf.insert(2, 'Damaging')
-                    self.bdelnoafPVars+=1
-                    if self.isPathogenicBySelectedTools != 1:
-                        self.isPathogenicBySelectedTools = 2
-            if x[0] == 'rankscore':
-                annotationDataRowBdelnoaf.insert(0, x[1])
-            if x[0] == 'score':
-                annotationDataRowBdelnoaf.insert(1, x[1])
-            if len(annotationDataRowBdelnoaf) == 3:
-                annotationDataRowBdelnoaf.insert(0, id)
-                annotationDataRowBdelnoaf.insert(1, hgvs37Id)
-                finalAnnotationDataBdelnoaf.append(annotationDataRowBdelnoaf.copy())
-                annotationDataRowBdelnoaf.clear()
+        x2 = ''
+        if x[0] == 'pred':
+            if isinstance(x[1], list):
+                x2 = list(x[1])
+            if x[1] == 'T' or x2.__contains__('T'):
+                annotationDataRowBdelnoaf.insert(2, 'Tolerant')
+
+            else:
+                annotationDataRowBdelnoaf.insert(2, 'Damaging')
+                self.bdelnoafPVars += 1
+                if self.isPathogenicBySelectedTools != 1:
+                    self.isPathogenicBySelectedTools = 2
+        if x[0] == 'rankscore':
+            annotationDataRowBdelnoaf.insert(0, x[1])
+        if x[0] == 'score':
+            annotationDataRowBdelnoaf.insert(1, x[1])
+        if len(annotationDataRowBdelnoaf) == 3:
+            annotationDataRowBdelnoaf.insert(0, id)
+            annotationDataRowBdelnoaf.insert(1, hgvs37Id)
+            finalAnnotationDataBdelnoaf.append(annotationDataRowBdelnoaf.copy())
+            annotationDataRowBdelnoaf.clear()
+
     def annotateByVest4(self, x, annotationDataRowVest4, finalAnnotationDataVest4, id,hgvs37Id):
         if x[0] == 'rankscore':
             annotationDataRowVest4.insert(0, x[1])
@@ -1214,13 +1479,16 @@ class VarintInfoIO:
             annotationDataRowEigenpc.clear()
 
     def annotateByDoegen2(self, x, annotationDataRowDoegen2, finalAnnotationDataDoegen2, id,hgvs37Id):
+        x2 = ''
         if x[0] == 'pred':
-            if x[1] == 'T':
+            if isinstance(x[1], list):
+                x2 = list(x[1])
+            if x[1] == 'T' or x2.__contains__('T'):
                 annotationDataRowDoegen2.insert(2, 'Tolerant')
-                self.isPathogenicBySelectedTools = 1
+
             else:
                 annotationDataRowDoegen2.insert(2, 'Damaging')
-                self.doegen2PVars+=1
+                self.doegen2PVars += 1
                 if self.isPathogenicBySelectedTools != 1:
                     self.isPathogenicBySelectedTools = 2
         if x[0] == 'rankscore':
@@ -1255,11 +1523,3 @@ class VarintInfoIO:
             annotationDataRowGenocanyon.insert(1, hgvs37Id)
             finalAnnotationDataGenocanyon.append(annotationDataRowGenocanyon.copy())
             annotationDataRowGenocanyon.clear()
-    def getHGVS37Ids(self, varids):
-        dbsnpvardata = DBSnpVarientDataRetrieval()
-        grch37vardatainstance = Grch37VariantData()
-        for varid in varids:
-           dbsnpvardata_str = dbsnpvardata.getvariantdata(varid)
-           grch37vardatainstance.parsevardatabystring(dbsnpvardata_str, varid)
-        hgvs37Ids=grch37vardatainstance.hgvs37Ids
-        return hgvs37Ids

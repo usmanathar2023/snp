@@ -172,11 +172,14 @@ no_of_pathg_vars_fname=''
 def annotateVariants(request):
 
     if request.method == 'POST':
+        rsids=''
         givenTerm = request.POST.get('genId')
+        rsids=request.POST.get('rsidTA')
+        print('rsids==', rsids)
         fabricatedTerm = givenTerm + ' AND missense variant[Function_Class]'
         global varInfoIO
         varInfoIO=VarintInfoIO()
-        varInfoIO.parseMyVarinats(request,fabricatedTerm)
+        varInfoIO.parseMyVarinats(request,fabricatedTerm,rsids)
         selectedTools=varInfoIO.chekboxValues
         print('selectedTools== ',selectedTools)
 
@@ -224,6 +227,8 @@ def annotateVariants(request):
         'eigenpc':varInfoIO.isEigenPC,
         'deogen2':varInfoIO.isDeogen2,
         'genocanyon':varInfoIO.isGenoCanyon,
+        'cadd': varInfoIO.isCadd,
+        'snpeff': varInfoIO.isSnpeff,
         ## no of pathogenic variants in each tool to be shown to the user
         'pvarsbysift':varInfoIO.siftPVars,
         'pvarsbysift4g': varInfoIO.sift4gPVars,
@@ -253,6 +258,8 @@ def annotateVariants(request):
         'pvarsbyeigenpc': varInfoIO.eigenpcPVars,
         'pvarsbydoegen2': varInfoIO.doegen2PVars,
         'pvarsbygenocanyon': varInfoIO.genocanyonPVars,
+        'pvarsbycadd': varInfoIO.caddPVars,
+        'pvarsbysnpeff': varInfoIO.snpeffPVars,
         ## end no of pathogenic variants in each tool to be shown to the user
         'pathogenicVarsLen':len(varInfoIO.pathogenicVariants),
         'varsNotFoundLen': len(varInfoIO.varDataNotFound),
@@ -455,6 +462,12 @@ def downloadVarAnnotation(request, tool):
         case 'genocanyon':
             fDownload = FileDownload()
             return fDownload.download_file(request, '/' + varInfoIO.genocanyonFile)
+        case 'cadd':
+            fDownload = FileDownload()
+            return fDownload.download_file(request, '/' + varInfoIO.caddFile)
+        case 'snpeff':
+            fDownload = FileDownload()
+            return fDownload.download_file(request, '/' + varInfoIO.snpeffFile)
         case 'pathogenicvarsfound':
             fDownload = FileDownload()
             return fDownload.download_file(request, '/' + varInfoIO.pathogenicVarFile)
@@ -714,6 +727,22 @@ def no_of_pahtogenic_variants(varInfoIO):
         pathogenic_vars = varInfoIO.genocanyonPVars
         non_pathogenic_vars = total_snps_int - pathogenic_vars
         local_list.append('GenoCanyon')
+        local_list.append(pathogenic_vars)
+        local_list.append(non_pathogenic_vars)
+        global_list.append(local_list.copy())
+        local_list.clear()
+    if varInfoIO.isCadd:
+        pathogenic_vars = varInfoIO.caddPVars
+        non_pathogenic_vars = total_snps_int - pathogenic_vars
+        local_list.append('Cadd')
+        local_list.append(pathogenic_vars)
+        local_list.append(non_pathogenic_vars)
+        global_list.append(local_list.copy())
+        local_list.clear()
+    if varInfoIO.isSnpeff:
+        pathogenic_vars = varInfoIO.snpeffPVars
+        non_pathogenic_vars = total_snps_int - pathogenic_vars
+        local_list.append('SnpEff')
         local_list.append(pathogenic_vars)
         local_list.append(non_pathogenic_vars)
         global_list.append(local_list.copy())

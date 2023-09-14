@@ -37,9 +37,12 @@
         <div  style="background: white;width: 100%;height: 50%;border-style: none;text-align: center">
            <br>
             <div class="row">
-                <div class="col" ><label class="form-label">Gen ID:&nbsp;</label><input class="border rounded" type="text" name="genId" style="width: 350px;" required></div>
-            </div>
+                <b><p style="color:  rgba(214,42,40,255)"> Retrieve Variant Annotations Using The Selected Tools </p></b>
+                <div class="col" ><label class="form-label">Gen ID:&nbsp;</label><input class="border rounded" type="text" name="genId" style="width: 350px;" ></div>
+                <div claass= "col"> <label class="form-label">OR&nbsp;</label></div>
+                <div claass= "col"> <textarea rows="3" cols="60" name="rsidTA" placeholder="Enter comma separated rsids"></textarea></div>
 
+            </div>
             <table style="margin-left: auto; margin-right: auto">
             <tbody>
             <tr>
@@ -85,6 +88,12 @@
                 <td ><input type="checkbox" name="chekboxValues" id="eigenpc" value="eigenpc" ><label class="form-label">&nbsp;Eigen-PC &nbsp; </label></td>
                 <td ><input type="checkbox" name="chekboxValues" id="deogen2" value="deogen2" ><label class="form-label">&nbsp;DEOGEN2   &nbsp; </label></td>
                <td> <input type="checkbox" name="chekboxValues" id="genocanyon" value="genocanyon " ><label class="form-label">&nbsp;GenoCanyon    &nbsp; </label></td>
+
+            </tr>
+            <tr>
+
+                <td ><input type="checkbox" name="chekboxValues" id="cadd" value="cadd"><label class="form-label">&nbsp;CADD &nbsp; </label></td>
+                <td ><input type="checkbox" name="chekboxValues" id="snpeff" value="snpeff"><label class="form-label">&nbsp;SnpEff 	&nbsp; </label></td>
 
             </tr>
             </tbody>
