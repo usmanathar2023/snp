@@ -1,8 +1,0 @@
-rsid,HGVSId,Coding Rankscore,CodingScore,Prediction
-rs4537,chr8:g.143995792T>C,0.00192,0.013706,Damaging
-rs4538,chr8:g.143994702G>A,0.48229,0.41207,Damaging
-rs4538,chr8:g.143994702G>C,0.33135,0.204962,Damaging
-rs4538,chr8:g.143994702G>T,0.33135,0.204962,Damaging
-rs4539,chr8:g.143996539T>C,0.03552,0.032065,Damaging
-rs4544,chr8:g.143994806A>G,0.01841,0.025856,Damaging
-rs4544,chr8:g.143994806A>T,0.04335,0.034672,Damaging
