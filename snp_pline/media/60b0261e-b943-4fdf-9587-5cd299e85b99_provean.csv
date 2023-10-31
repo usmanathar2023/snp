@@ -1,0 +1,8 @@
+rsid,HGVSId,Score,Prediction
+rs4537,chr8:g.143995792T>C,0.0581,0.1,Tolerant
+rs4538,chr8:g.143994702G>A,0.95634,-7.7,Damaging
+rs4538,chr8:g.143994702G>C,0.92346,-6.67,Damaging
+rs4538,chr8:g.143994702G>T,0.92346,-6.67,Damaging
+rs4539,chr8:g.143996539T>C,0.12661,-0.34,Tolerant
+rs4544,chr8:g.143994806A>G,0.00973,1.28,Tolerant
+rs4544,chr8:g.143994806A>T,0.08187,-0.08,Tolerant

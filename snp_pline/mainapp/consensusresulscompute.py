@@ -27,33 +27,23 @@ class ConsensusResultsCompute:
     damagingCount=0;
     numberOfToolsFound = 0;
     consensusResults =[];
-    def parseMyVarinats(self, request,fabricatedTerm):
+    def parseMyVarinats(self, request,fabricatedTerm,rsids):
         self.pathogenicVariants.clear()
         mv = myvariant.MyVariantInfo();
         self.chekboxValues.clear()
         mvVar = ''
-        Entrez.email = "usman.athar@gmail.com"
-        handle = Entrez.esearch(db="snp", term=fabricatedTerm, retmax=10)
-        variantData = Entrez.read(handle)
-        self.totalSNPs = variantData['Count']
-        varids = variantData["IdList"]
-
-        ##benign ids
-        #varids=['58257972','111033269','41315579','111033524','111033282','8192671','142004123','140811086','200712930','56219475','757213444','190222208','139290271','143962515',
-        #        '139592595','1257347271','17217716','41295286','17217772','63750255','63750327','34136999','4987188','17224367','55778204','61756468','1042821','3211299','2020908',
-         #       '2020912','559632360','5746220','184022679','192632236','372738063','41295280','28930073','2308317','1799977','63750650','63751049','201541505','63750447','41294980',
-          #      '63750365','63750271','63751612','63750449','63750702','587779957','35831931','2020873','201507590','145564837','1802683','17420802','1805324','1805318','74902811',
-           #     '2228007','1805323','1805321','10254120','35045430','145467740','375576481','545495379','775040765','397516907','397507456','181255269','41281314','11202592','397517231',
-            #    '145463534','397517144','397517140','200945755','111352454','138272051','612969','35107075','587778635','201787206','535800148','397507534','148176616','80358762','4987046',
-             #   '80358454','28897701','80358567','80358674','80358726','766173','28897706','55800493','144848','80358408','41293475']
-        ##pathogenic ids
-        varids=['80358650','28897743','80359013','80359014','80359031','41293511','80359071','45580035','28897759','766074609','779556619','369531647','368438393','536906561',
-                '370950728','757700700','543300039','63750741','267608122','63750206','63750781','63751711','63751194','3218714','121913624','121913625','397516101','121913642','121913626','371898076',
-                '121913638','121913637','121913641','121913630','121913630','727503261','121913632','121913632','397516153','36211715','397516161','267606908','121913631','397516269','797044516','397516322',
-                '62516062','62642937','62516101','62516101','5030856','180819807','62642926','199475658','5030857','62642928','5030858','5030859','79931499','5030860','62644499','62644501','74603784','5030841',
-                '75193786','62514891','76394784','62642929','542645236','199475663','75166491','5030843','281865440','199475655','74486803','74486803','199475602','199475602','1448720360','77958223',
-                '62514927','62514931','62516109','76687508','62508730','76212747','74503222','5030847','5030847','62644503','5030849','5030849','778154939','62508692','62514950','62508691',
-                '78655458','199475693','62642939','5030853']
+        varids = []
+        if len(rsids) > 0: #and rsids != NULL:
+            rsids=rsids.split(",")
+            for rsid in rsids:
+                varids.append(rsid.removeprefix("rs").strip())
+        else:
+            Entrez.email = "usman.athar@gmail.com"
+            handle = Entrez.esearch(db="snp", term=fabricatedTerm, retmax=10)
+            variantData = Entrez.read(handle)
+            #self.totalSNPs = variantData['Count']
+            varids = variantData["IdList"]
+        print("varids", varids)
         dictIO = DictionaryIO()
         csvfw = CSVFileWriting();
         self.isSift = False; self.isSift4G = False; self.isProvean = False; self.isMVP = False; self.isPolyphen2HVAR = False; self.isPolyphen2HDIV = False;
@@ -65,7 +55,7 @@ class ConsensusResultsCompute:
         print('self.chekboxValues === ', self.chekboxValues)
         if self.chekboxValues.__contains__('on'):
             self.numberOfToolsFound-=1
-        print('Selected Tools === ', self.numberOfToolsFound)
+
         self.numberOfToolsFound += len(self.chekboxValues);
         print('Selected Tools === ', self.numberOfToolsFound)
 
@@ -86,6 +76,8 @@ class ConsensusResultsCompute:
         annotationDataRowDoegen2 = [];  finalAnnotationDataDoegen2 = [];  annotationDataRowGenocanyon = [];  finalAnnotationDataGenocanyon = []
         fabricatedFields.clear(); self.toolAnnonotationNotFound.clear(); self.varDataNotFound.clear();
         hgvs37Ids=self.getHGVS37Ids(varids)
+        self.totalSNPs = len(hgvs37Ids)
+        print('self.totalSNPs inside consus tools==', self.totalSNPs)
         #print("hgvs37Ids",hgvs37Ids)
         varDataNotFound_local=[]
         consensusResults_local=[]
@@ -94,8 +86,8 @@ class ConsensusResultsCompute:
         snpeffStr='';
         caddSourceFound = 0; dbnsfpSourceFound = 0; snpeffSourceFound = 0;
         self.resultsFile = 'media/' + str(uuid.uuid4()) + '_ipsnp_results' + '.csv'
-        print('hgvs37Ids== ',hgvs37Ids)
-        print('varids== ', varids)
+        #print('hgvs37Ids== ',hgvs37Ids)
+        #print('varids== ', varids)
         for vars in hgvs37Ids: #varids: for (a, b, c) in itertools.zip_longest(num, color, value, fillvalue=-1):
             id = vars[0]
             hgvs37Id = vars[1] #'rs' + str(varid)
@@ -1197,8 +1189,13 @@ class ConsensusResultsCompute:
     def getHGVS37Ids(self, varids):
         dbsnpvardata = DBSnpVarientDataRetrieval()
         grch37vardatainstance = Grch37VariantData()
+        dbsnpvardata_str=''
         for varid in varids:
-           dbsnpvardata_str = dbsnpvardata.getvariantdata(varid)
+           print("varid", varid)
+           try:
+            dbsnpvardata_str = dbsnpvardata.getvariantdata(varid)
+           except:
+               print("NCBI server error: Data not found for", varid, ' rs id')
            grch37vardatainstance.parsevardatabystring(dbsnpvardata_str, varid)
         hgvs37Ids=grch37vardatainstance.hgvs37Ids
         return hgvs37Ids

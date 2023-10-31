@@ -1,0 +1,4 @@
+Tool,Pathogenic Variants,Non Pathogenic Variants
+Sift,3,1
+MutPred,3,1
+fathmm-MKL,7,-3

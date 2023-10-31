@@ -22,6 +22,14 @@ function uncheckAll() {
                     alert("Please Check at least one Check Box");
              return false;
              }
+             var genId=document.forms["varAnnotationForm"]["genId"].value;
+             var varIds=document.forms["varAnnotationForm"]["rsidTA"].value;
+             varIds=varIds.trim()
+             genId=genId.trim()
+             if ((genId.length==0) && (varIds.length==0) || (genId.length>0) && (varIds.length>0)) {
+                alert("Please provide Gen ID or variant list ");
+                return false;
+             }
         });
     });
        </script>
@@ -33,12 +41,15 @@ function uncheckAll() {
         <div  style="background: white;width: 100%;height: 50%;border-style: none;text-align: center">
 
             <input type="hidden" name="varNotFoundTxt", id="varNotFoundTxt" value='noFile'/>
+
             <br>
 
             <input type="hidden" value='noFile'/>
             <div class="row">
                 <b><p style="color:  rgba(214,42,40,255)"> Retrieve Chromosal/ Proteomic Data Using Various Options </p></b>
-                <div class="col"><label class="form-label">Gen ID:&nbsp;</label><input class="border rounded" type="text" name="genId" style="width: 350px;" required></div>
+                <div class="col"><label class="form-label">Gen ID:&nbsp;</label><input class="border rounded" type="text" name="genId" style="width: 350px;" ></div>
+                <div claass= "col"> <label class="form-label">OR&nbsp;</label></div>
+                <div claass= "col"> <textarea rows="3" cols="60" name="rsidTA" placeholder="Enter comma separated rsids"></textarea></div>
             </div> <br>
             <table style="margin-left: auto; margin-right: auto">
             <tbody>

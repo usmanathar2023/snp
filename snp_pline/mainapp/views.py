@@ -44,15 +44,24 @@ def vardataretrievalprocessing(request):
     if request.method == 'POST':
         fName= request.POST.get('varNotFoundTxt')
         print('fName...', fName)
-
+        rsidsGiven=0;
         if fName == 'noFile':
-            givenTerm = request.POST.get('genId')
-            fabricatedTerm = givenTerm + ' AND missense variant[Function_Class]'
-            Entrez.email = "usman.athar@gmail.com"
-            handle = Entrez.esearch(db="snp", term=fabricatedTerm, retmax=5)
-            variantData = Entrez.read(handle)
-            totalSNPs = variantData['Count']
-            varids = variantData["IdList"]
+
+            rsidsGiven = request.POST.get('rsidTA')
+            if rsidsGiven == 0:
+                givenTerm = request.POST.get('genId')
+                fabricatedTerm = givenTerm + ' AND missense variant[Function_Class]'
+                Entrez.email = "usman.athar@gmail.com"
+                handle = Entrez.esearch(db="snp", term=fabricatedTerm, retmax=5)
+                variantData = Entrez.read(handle)
+                #totalSNPs = variantData['Count']
+                varids = variantData["IdList"]
+            else:
+                rsids = rsidsGiven.split(",")
+                for rsid in rsids:
+                    varids.append(rsid.removeprefix("rs").strip())
+                #totalSNPs = len(varids)
+
         else:
             #print('csvfw...', csvfw)
             givenTerm = str(request.POST.get('genid'))
@@ -96,11 +105,14 @@ def vardataretrievalprocessing(request):
             #print('dbsnpvardata_str==', dbsnpvardata_str)
             if chekboxValues.__contains__('grch37'):  #writing GRCh37 chromosome coordinates
                 grch37vardatainstance.parsevardatabystring(dbsnpvardata_str, varid)
+                totalSNPs=len(grch37vardatainstance.chr_coord_list)
             if chekboxValues.__contains__('grch38'): # writing GRCh38 chromosome coordinates in csv format
                 grch38vardatainstance.parsevardatabystring(dbsnpvardata_str, varid)
+                totalSNPs = len(grch38vardatainstance.chr_coord_list)
             if chekboxValues.__contains__('protdata'):
                 #print("dbsnpvardata_str==",dbsnpvardata_str)
                 prot_var_data.parsevardatabystring(dbsnpvardata_str,varid)
+                totalSNPs = len(prot_var_data.prot_coord_list)
                # print("dbsnpvardata_str==", dbsnpvardata_str)
                 if count==0:
                     protData=refseqid_to_uniprotid.get_uniprotid_from_refseqid(givenTerm,prot_var_data.prot_var_data_dict['refSeqProtId'])
@@ -175,7 +187,7 @@ def annotateVariants(request):
         rsids=''
         givenTerm = request.POST.get('genId')
         rsids=request.POST.get('rsidTA')
-        print('rsids==', rsids)
+
         fabricatedTerm = givenTerm + ' AND missense variant[Function_Class]'
         global varInfoIO
         varInfoIO=VarintInfoIO()
@@ -273,10 +285,12 @@ def consensusResults(request):
 
     if request.method == 'POST':
         givenTerm = request.POST.get('genId')
+        rsids = request.POST.get('rsidTA')
+        print('inside consensusResults rsids==', rsids)
         fabricatedTerm = givenTerm + ' AND missense variant[Function_Class]'
         global consResCompute
         consResCompute=ConsensusResultsCompute()
-        consResCompute.parseMyVarinats(request,fabricatedTerm)
+        consResCompute.parseMyVarinats(request,fabricatedTerm,rsids)
         selectedTools=consResCompute.chekboxValues
         print('selectedTools inside views== ',selectedTools)
 

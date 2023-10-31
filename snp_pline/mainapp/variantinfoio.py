@@ -35,24 +35,23 @@ class VarintInfoIO:
         self.pathogenicVariants.clear()
         mv = myvariant.MyVariantInfo();
         self.chekboxValues.clear()
-        print('rsids==',rsids)
+        #print('rsids==',rsids)
         varids=[]
         mvVar = ''
         if len(rsids) > 0: #and rsids != NULL:
             rsids=rsids.split(",")
             for rsid in rsids:
-                varids.append(rsid.removeprefix("rs"))
+                varids.append(rsid.removeprefix("rs").strip())
+            #self.totalSNPs=len(varids)
+
 
         else:
             Entrez.email = "usman.athar@gmail.com"
             handle = Entrez.esearch(db="snp", term=fabricatedTerm, retmax=5)
             variantData = Entrez.read(handle)
-            self.totalSNPs = variantData['Count']
+            #self.totalSNPs = variantData['Count']
             varids = variantData["IdList"]
-        print('varids==', varids)
-
-
-        print('varids==', varids)
+        #print('varids==', varids)
         dictIO = DictionaryIO()
         csvfw = CSVFileWriting();
         self.isSift = False; self.isSift4G = False; self.isProvean = False; self.isMVP = False; self.isPolyphen2HVAR = False; self.isPolyphen2HDIV = False;
@@ -88,7 +87,11 @@ class VarintInfoIO:
         annotationDataRowSnpeff = []; finalAnnotationDataSnpeff = [];
         fabricatedFields.clear(); self.toolAnnonotationNotFound.clear(); self.varDataNotFound.clear(); self.caddDataNotFound.clear(); self.snpeffDataNotFound.clear()
         self.printmyname()
+        hgvs37Ids=[]
         hgvs37Ids=self.getHGVS37Ids(varids)
+        print('hgvs37Ids==', hgvs37Ids)
+        self.totalSNPs= len(hgvs37Ids)
+        print('self.totalSNPs==', self.totalSNPs)
         #print("hgvs37Ids",hgvs37Ids)
         varDataNotFound_local=[]
         pathogenicVariants_local=[]
@@ -218,7 +221,7 @@ class VarintInfoIO:
                         #print(x)
                         #if len(x)>0: #if x[0] == 'sift':
                         self.annotateBySift(x, annotationDataRowSift, finalAnnotationDataSift, id,hgvs37Id)
-                    if loopCount==0:
+                    if len(self.siftFile)==0:
                         self.siftFile='media/' + str(uuid.uuid4()) +'_sift' + '.csv'
 
                 else:
@@ -229,7 +232,7 @@ class VarintInfoIO:
                         #print(x)
                         #if len(x)>0:#if x[0] == 'sift4g':
                         self.annotateBySift4g(x,annotationDataRowSift4g,finalAnnotationDataSift4g,id,hgvs37Id)
-                   if loopCount==0:
+                   if len(self.sift4gFile) == 0:
                         self.sift4gFile='media/' + str(uuid.uuid4()) +'_sift4g' + '.csv'
 
                 else:
@@ -240,7 +243,7 @@ class VarintInfoIO:
                         #print(x)
                         #if len(x)>0:#if x[0] == 'provean':
                             self.annotateByProvean(x,annotationDataRowProvean,finalAnnotationDataProvean,id,hgvs37Id)
-                    if loopCount==0:
+                    if len(self.proveanFile) == 0:
                         self.proveanFile='media/' + str(uuid.uuid4()) +'_provean' + '.csv'
 
                 else:
@@ -251,7 +254,7 @@ class VarintInfoIO:
                         #print(x)
                         #if len(x)>0:#if x[0] == 'mvp':
                         self.annotateByMVP(x,annotationDataRowMVP,finalAnnotationDataMVP,id,hgvs37Id)
-                   if loopCount==0:
+                   if len(self.mvpFile) == 0:
                         self.mvpFile='media/' + str(uuid.uuid4()) +'_mvp' + '.csv'
 
                 else:
@@ -265,7 +268,7 @@ class VarintInfoIO:
                         #if len(x)>0:# 'hvar':
                         self.annotateByPolyphen2hvar(x,annotationDataRowPolyphen2hvar,finalAnnotationDataPolyphen2hvar,id,hgvs37Id)
 
-                    if loopCount==0:
+                    if len(self.polyphen2hvarFile) == 0:
                         self.polyphen2hvarFile='media/' + str(uuid.uuid4()) +'_polyphen2hvar' + '.csv'
 
                 else:
@@ -278,7 +281,7 @@ class VarintInfoIO:
                        # print(x)
                         #if len(x)>0:#'hdiv':
                         self.annotateByPolyphen2hdiv(x,annotationDataRowPolyphen2hdiv,finalAnnotationDataPolyphen2hdiv,id,hgvs37Id)
-                    if loopCount==0:
+                    if len(self.polyphen2hdivFile) == 0:
                         self.polyphen2hdivFile='media/' + str(uuid.uuid4()) +'_polyphen2hdiv' + '.csv'
 
                 else:
@@ -289,7 +292,7 @@ class VarintInfoIO:
                         #print(x)
                         #if len(x)>0:#if x[0] == 'primateai':
                         self.annotateByPrimateai(x,annotationDataRowPrimateai,finalAnnotationDataPrimateai,id,hgvs37Id)
-                   if loopCount==0:
+                   if len(self.primateaiFile) == 0:
                         self.primateaiFile='media/' + str(uuid.uuid4()) +'_primateai' + '.csv'
 
                 else:
@@ -300,7 +303,7 @@ class VarintInfoIO:
                         #print(x)
                         #if len(x)>0:#if x[0] == 'primateai':
                         self.annotateByRevel(x,annotationDataRowRevel,finalAnnotationDataRevel,id,hgvs37Id)
-                   if loopCount==0:
+                   if len(self.revelFile) == 0:
                         self.revelFile='media/' + str(uuid.uuid4()) +'_revel' + '.csv'
 
                 else:
@@ -311,18 +314,20 @@ class VarintInfoIO:
                         #print(x)
                         #if len(x)>0:#if x[0] == 'primateai':
                         self.annotateByMPC(x,annotationDataRowMPC,finalAnnotationDataMPC,id,hgvs37Id)
-                   if loopCount==0:
+                   if len(self.mpcFile) == 0:
                         self.mpcFile='media/' + str(uuid.uuid4()) +'_mpc' + '.csv'
 
                 else:
                     self.toolAnnonotationNotFound['mpc' + str(loopCount)] = id
 
                 if self.chekboxValues.__contains__('mutpred') and  'mutpred' in dbnsfpVarDic:
+                    print('inside mutpred loopCount ===',loopCount)
                     for x in dictIO.nested_dict_pairs_iterator(dbnsfpVarDic.get('mutpred'),'mutpred'):
                         #print(x)
                         #if len(x) > 0:  # if x[0] == 'primateai':
                         self.annotateByMutpred(x, annotationDataRowMutpred, finalAnnotationDataMutpred, id,hgvs37Id)
-                    if loopCount==0:
+                    #if loopCount==0:
+                    if len(self.mutpredFile)==0:
                         self.mutpredFile='media/' + str(uuid.uuid4()) +'_mutpred' + '.csv'
 
                 else:
@@ -333,7 +338,7 @@ class VarintInfoIO:
                         #print(x)
                         #if len(x) > 0:  # if x[0] == 'primateai':
                             self.annotateByMtaster(x, annotationDataRowMtaster, finalAnnotationDataMtaster, id,hgvs37Id)
-                    if loopCount==0:
+                    if len(self.mtasterFile) == 0:
                         self.mtasterFile='media/' + str(uuid.uuid4()) +'_mtaster' + '.csv'
 
                 else:
@@ -344,7 +349,7 @@ class VarintInfoIO:
                         #print(x)
                         if len(x) > 0:  # if x[0] == 'primateai':
                             self.annotateByMassessor(x, annotationDataRowMassessor, finalAnnotationDataMassessor, id,hgvs37Id)
-                   if loopCount==0:
+                   if len(self.massessorFile) == 0:
                         self.massessorFile='media/' + str(uuid.uuid4()) +'_massessor' + '.csv'
 
                 else:
@@ -357,7 +362,7 @@ class VarintInfoIO:
                         #if len(x) > 0:  # if x[0] == 'primateai':
                             self.annotateByMRNN(x, annotationDataRowMRNN, finalAnnotationDataMRNN, id,hgvs37Id)
 
-                    if loopCount==0:
+                    if len(self.mrnnFile) == 0:
                         self.mrnnFile='media/' + str(uuid.uuid4()) +'_mrnn' + '.csv'
 
                 else:
@@ -369,7 +374,7 @@ class VarintInfoIO:
                         #print(x)
                         #if len(x) > 0:  # if x[0] == 'primateai':
                         self.annotateByMRNN(x, annotationDataRowMSVM, finalAnnotationDataMSVM, id,hgvs37Id)
-                    if loopCount==0:
+                    if len(self.msvmFile) == 0:
                         self.msvmFile='media/' + str(uuid.uuid4()) +'_msvm' + '.csv'
 
                 else:
@@ -381,7 +386,7 @@ class VarintInfoIO:
                         #print(x)
                         #if len(x) > 0:  # if x[0] == 'primateai':
                         self.annotateByMLR(x, annotationDataRowMLR, finalAnnotationDataMLR, id,hgvs37Id)
-                    if loopCount==0:
+                    if len(self.mlrFile) == 0:
                         self.mlrFile='media/' + str(uuid.uuid4()) +'_mlr' + '.csv'
 
                 else:
@@ -393,7 +398,7 @@ class VarintInfoIO:
                         #print(x)
                         #if len(x) > 0:  # if x[0] == 'primateai':
                         self.annotateByMCAP(x, annotationDataRowMCAP, finalAnnotationDataMCAP, id,hgvs37Id)
-                    if loopCount==0:
+                    if len(self.mcapFile) == 0:
                             self.mcapFile='media/' + str(uuid.uuid4()) +'_mcap' + '.csv'
 
                 else:
@@ -405,7 +410,7 @@ class VarintInfoIO:
                         # print(x)
                         #if len(x) > 0:  # if x[0] == 'primateai':
                         self.annotateByLS2(x, annotationDataRowLS2, finalAnnotationDataLS2, id,hgvs37Id)
-                    if loopCount==0:
+                    if len(self.ls2File) == 0:
                         self.ls2File='media/' + str(uuid.uuid4()) +'_ls2' + '.csv'
 
                 else:
@@ -417,7 +422,7 @@ class VarintInfoIO:
                         # print(x)
                         #if len(x) > 0:  # if x[0] == 'primateai':
                         self.annotateByFathmm(x, annotationDataRowFathmm, finalAnnotationDataFathmm, id,hgvs37Id)
-                    if loopCount==0:
+                    if len(self.fathmmFile) == 0:
                         self.fathmmFile='media/' + str(uuid.uuid4()) +'_fathmm' + '.csv'
 
                 else:
@@ -428,7 +433,7 @@ class VarintInfoIO:
                         # print(x)
                         #if len(x) > 0:  # if x[0] == 'primateai':
                         self.annotateByFXF(x, annotationDataRowFXF, finalAnnotationDataFXF, id,hgvs37Id)
-                    if loopCount==0:
+                    if len(self.fxfFile) == 0:
                         self.fxfFile='media/' + str(uuid.uuid4()) +'_fxf' + '.csv'
 
                 else:
@@ -440,7 +445,7 @@ class VarintInfoIO:
                         # print(x)
                         #if len(x) > 0:  # if x[0] == 'primateai':
                         self.annotateByFMKL(x, annotationDataRowFMKL, finalAnnotationDataFMKL, id,hgvs37Id)
-                    if loopCount==0:
+                    if len(self.fmklFile) == 0:
                         self.fmklFile='media/' + str(uuid.uuid4()) +'_fmkl' + '.csv'
 
                 else:
@@ -454,7 +459,7 @@ class VarintInfoIO:
                         #print(x)
                         #if len(x) > 0:  # if x[0] == 'primateai':
                         self.annotateByBdeladdaf(x, annotationDataRowBdeladdaf, finalAnnotationDataBdeladdaf, id,hgvs37Id)
-                    if loopCount==0:
+                    if len(self.bdeladdafFile) == 0:
                         self.bdeladdafFile='media/' + str(uuid.uuid4()) +'_bdeladdaf' + '.csv'
 
                 else:
@@ -468,7 +473,7 @@ class VarintInfoIO:
                         #print(x)
                         #if len(x) > 0:  # if x[0] == 'primateai':
                         self.annotateByBdelnoaf(x, annotationDataRowBdelnoaf, finalAnnotationDataBdelnoaf, id,hgvs37Id)
-                    if loopCount==0:
+                    if len(self.bdelnoafFile) == 0:
                         self.bdelnoafFile='media/' + str(uuid.uuid4()) +'_bdelnoaf' + '.csv'
 
                 else:
@@ -480,7 +485,7 @@ class VarintInfoIO:
                         # print(x)
                         #if len(x) > 0:  # if x[0] == 'primateai':
                         self.annotateByVest4(x, annotationDataRowVest4, finalAnnotationDataVest4, id,hgvs37Id)
-                    if loopCount==0:
+                    if len(self.vest4File) == 0:
                         self.vest4File='media/' + str(uuid.uuid4()) +'_vest4' + '.csv'
 
                 else:
@@ -492,7 +497,7 @@ class VarintInfoIO:
                         # print(x)
                         #if len(x) > 0:  # if x[0] == 'primateai':
                         self.annotateByDann(x, annotationDataRowDann, finalAnnotationDataDann, id,hgvs37Id)
-                    if loopCount==0:
+                    if len(self.dannFile) == 0:
                         self.dannFile='media/' + str(uuid.uuid4()) +'_dann' + '.csv'
 
                 else:
@@ -504,7 +509,7 @@ class VarintInfoIO:
                         # print(x)
                         #if len(x) > 0:  # if x[0] == 'primateai':
                         self.annotateByEigen(x, annotationDataRowEigen, finalAnnotationDataEigen, id,hgvs37Id)
-                    if loopCount==0:
+                    if len(self.eigenFile) == 0:
                         self.eigenFile='media/' + str(uuid.uuid4()) +'_eigen' + '.csv'
 
                 else:
@@ -516,7 +521,7 @@ class VarintInfoIO:
                         # print(x)
                         #if len(x) > 0:  # if x[0] == 'primateai':
                         self.annotateByEigenpc(x, annotationDataRowEigenpc, finalAnnotationDataEigenpc, id,hgvs37Id)
-                    if loopCount==0:
+                    if len(self.eigenpcFile) == 0:
                         self.eigenpcFile='media/' + str(uuid.uuid4()) +'_eigenpc' + '.csv'
 
                 else:
@@ -528,7 +533,7 @@ class VarintInfoIO:
                         # print(x)
                         if len(x) > 0:  # if x[0] == 'primateai':
                             self.annotateByDoegen2(x, annotationDataRowDoegen2, finalAnnotationDataDoegen2, id,hgvs37Id)
-                    if loopCount==0:
+                    if len(self.doegen2File) == 0:
                         self.doegen2File='media/' + str(uuid.uuid4()) +'_deogen2' + '.csv'
 
                 else:
@@ -541,7 +546,7 @@ class VarintInfoIO:
                         #if len(x) > 0:  # if x[0] == 'primateai':
                         self.annotateByGenocanyon(x, annotationDataRowGenocanyon, finalAnnotationDataGenocanyon, id,hgvs37Id)
 
-                    if loopCount==0:
+                    if len(self.genocanyonFile) == 0:
                         self.genocanyonFile='media/' + str(uuid.uuid4()) +'_genocanyon' + '.csv'
 
 
@@ -578,7 +583,7 @@ class VarintInfoIO:
                         finalAnnotationDataCadd.append(annotationDataRowCadd.copy())
                         annotationDataRowCadd.clear()
 
-                    if loopCount == 0:
+                    if len(self.caddFile) == 0:
                         self.caddFile = 'media/' + str(uuid.uuid4()) + '_cadd' + '.csv'
 
                         #print('caddPgredScoreInt: ', caddPgredScoreInt)
@@ -612,7 +617,7 @@ class VarintInfoIO:
                         finalAnnotationDataSnpeff.append(annotationDataRowSnpeff.copy())
                         annotationDataRowSnpeff.clear()
                         #print('snpeffpredition: ', snpeffpredition)
-                    if loopCount == 0:
+                    if len(self.snpeffFile) == 0:
                         self.snpeffFile = 'media/' + str(uuid.uuid4()) + '_snpeff' + '.csv'
                 else:
                     self.toolAnnonotationNotFound['snpeff' + str(loopCount)] = id
@@ -696,6 +701,7 @@ class VarintInfoIO:
 
         if len(finalAnnotationDataMutpred) > 0:
             fieldnames = ['rsid','HGVSId', 'Rankscore', 'Score', 'Prediction']
+            print('self.mutpredFile==', self.mutpredFile)
             csvfw.writeAnnotationDateCSV(finalAnnotationDataMutpred, self.mutpredFile, fieldnames)
             self.isMutPred=True
         else:
@@ -1112,7 +1118,7 @@ class VarintInfoIO:
 
             else:
                 annotationDataRowMtaster.insert(2, 'Damaging')
-                self.mvpPVars += 1
+                self.mtasterPVars += 1
                 if self.isPathogenicBySelectedTools != 1:
                     self.isPathogenicBySelectedTools = 2
 

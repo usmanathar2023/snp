@@ -1,0 +1,8 @@
+rsid,HGVSId,Converted Rankscore,Score,Prediction
+rs4537,chr8:g.143995792T>C,0.08106,0.594,Tolerant
+rs4538,chr8:g.143994702G>A,0.92824,0.0,Damaging
+rs4538,chr8:g.143994702G>C,0.92824,0.0,Damaging
+rs4538,chr8:g.143994702G>T,0.92824,0.0,Damaging
+rs4539,chr8:g.143996539T>C,0.03527,0.848,Tolerant
+rs4544,chr8:g.143994806A>G,0.13177,0.444,Tolerant
+rs4544,chr8:g.143994806A>T,0.15698,0.386,Tolerant

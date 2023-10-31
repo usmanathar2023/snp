@@ -4,6 +4,7 @@ class DBSnpVarientDataRetrieval:
         server = "https://api.ncbi.nlm.nih.gov/variation/v0/"
         ext = "beta/refsnp/" + varid
         r = requests.get(server + ext)  # , headers={"Content-Type": "application/json"})
+        print("inside DBSnpVarientDataRetrieval r===", r)
         spdiIdInfo = r.json()
         spdiIdInfo_str = json.dumps(spdiIdInfo)
         # spdiIdInfo_dict = json.loads(spdiIdInfo_str)

@@ -29,6 +29,14 @@
                     alert("Please Check at least one Check Box");
              return false;
              }
+             var genId=document.forms["varAnnotationForm"]["genId"].value;
+             var varIds=document.forms["varAnnotationForm"]["rsidTA"].value;
+             varIds=varIds.trim()
+             genId=genId.trim()
+             if ((genId.length==0) && (varIds.length==0) || (genId.length>0) && (varIds.length>0)) {
+                alert("Please provide Gen ID or variant list ");
+                return false;
+             }
         });
     });
        </script>
